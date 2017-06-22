@@ -48,7 +48,7 @@ quali_uni <- function(table, choix_multiple = FALSE, marge_gauche = FALSE, taill
 #' quali_bi_aires
 #'
 #' @param table
-quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, palette_ordinal = FALSE) {
+quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE) {
 
   if (nrow(table) == 0) {
     if (class(table$champ_x) != "factor") {
@@ -97,7 +97,10 @@ quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FA
   }
 
   if (position_legende == "bas") {
-    plot <- plot + ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
+    plot <- plot + ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE, byrow = TRUE))
+    if (!is.null(nombre_lignes_legende)) {
+      plot <- plot + ggplot2::guides(fill = ggplot2::guide_legend(nrow = nombre_lignes_legende, byrow = TRUE, reverse = TRUE))
+    }
   }
 
   return(plot)
@@ -106,7 +109,6 @@ quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FA
 #' quali_bi_ordinal
 #'
 #' @param table
-quali_bi_ordinal <- function(table, levels_y, levels_valeur) {
 
   if (nrow(table) == 0) {
     if (class(table$champ_quali) != "factor") {
