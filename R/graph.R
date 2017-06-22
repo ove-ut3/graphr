@@ -109,6 +109,7 @@ quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FA
 #' quali_bi_ordinal
 #'
 #' @param table
+quali_bi_ordinal <- function(table, levels_y, levels_valeur, taille_texte_legende = 1) {
 
   if (nrow(table) == 0) {
     if (class(table$champ_quali) != "factor") {
@@ -133,8 +134,8 @@ quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FA
     ggplot2::theme(legend.title = ggplot2::element_blank(),
                    legend.position = "bottom",
                    legend.box.spacing = ggplot2::unit(1, "mm"),
-                   legend.key.size = ggplot2::unit(1, 'lines'),
-                   legend.text = ggplot2::element_text(size = 8)) +
+                   legend.text = ggplot2::element_text(size = 8),
+                   legend.key.size = ggplot2::unit(taille_texte_legende, 'lines')) +
     ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
 
   return(plot)
