@@ -1,12 +1,20 @@
 #' quali_uni
 #'
-#' @param table
-quali_uni <- function(table, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5) {
+#' @param champ_quali \dots
+#' @param choix_multiple \dots
+#' @param choix_multiple_tous \dots
+#' @param marge_gauche \dots
+#' @param taille_texte \dots
+#'
+#' @export
+quali_uni <- function(champ_quali, choix_multiple = FALSE, choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
 
-  if (nrow(table) == 0) {
-    if (class(table$champ_quali) == "factor") {
-      table <- table %>%
-        dplyr::add_row(champ_quali = tail(levels(table$champ_quali), 1),
+  stats <- stats_count_uni(champ_quali, choix_multiple_labels)
+
+  if (nrow(stats) == 0) {
+    if (is.factor(stats$champ_quali)) {
+      stats <- stats %>%
+        dplyr::add_row(champ_quali = tail(levels(stats$champ_quali), 1),
                        n = 0)
     } else {
       cat("effectif nul")
@@ -14,26 +22,26 @@ quali_uni <- function(table, choix_multiple = FALSE, marge_gauche = FALSE, taill
     }
   }
 
-  if (class(table$champ_quali) != "factor") {
-    if (is.null(table[["ordre"]])) {
-      table <- dplyr::mutate(table, ordre = row_number())
+  if (!is.factor(stats$champ_quali)) {
+    if (is.null(stats[["ordre"]])) {
+      stats <- dplyr::mutate(stats, ordre = row_number())
     }
-    plot <- ggplot2::ggplot(table, ggplot2::aes(x = reorder(champ_quali, -ordre), y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = reorder(champ_quali, -ordre), y = n, fill = champ_quali))
   } else {
-    plot <- ggplot2::ggplot(table, ggplot2::aes(x = champ_quali, y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = factor(champ_quali, levels = rev(levels(champ_quali))), y = n, fill = champ_quali))
   }
 
   plot <- plot +
     ggplot2::geom_col(show.legend = FALSE, width = 0.5) +
     ggplot2::scale_x_discrete(drop = FALSE) +
-    ggplot2::scale_y_continuous(breaks = echelle_integer(table$n)) +
+    ggplot2::scale_y_continuous(breaks = graphr::echelle_integer(stats$n)) +
     ggplot2::coord_flip() +
     ggplot2::theme_bw()
 
   if (choix_multiple == TRUE) {
     plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, aes(y = 0.2, hjust = 0, label = ifelse(n >= 1, format(n, big.mark = " "), "")))
   } else if (choix_multiple == FALSE) {
-    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, aes(y = 0.2, hjust = 0, label = paste0(format(n, big.mark = " "), " (", trimws(format(round(n / sum(n) * 100, 1), decimal.mark = ",")), "%)")))
+    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, aes(y = 0.2, hjust = 0, label = paste0(format(n, big.mark = " "), " (", pct, ")")))
   }
 
   if (marge_gauche == TRUE) {
@@ -42,18 +50,111 @@ quali_uni <- function(table, choix_multiple = FALSE, marge_gauche = FALSE, taill
     plot <- plot + ggplot2::labs(x = NULL, y = NULL)
   }
 
+  texte_repondants <- pct_repondants(sum(stats$n), length(champ_quali))
+
+  if (!is.null(texte_repondants)) {
+    plot <- plot +
+      ggplot2::labs(title = texte_repondants) +
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 8, hjust = 1, margin = ggplot2::margin(b = 5)))
+
+  }
+
+  return(plot)
+
+}
+
+#' quali_uni_aires
+#'
+#' @param table \dots
+#' @param identifiant \dots
+#' @param n_graph \dots
+#' @param n_population \dots
+#' @param label_pourcentage \dots
+#' @param label_pourcentage_saut_ligne \dots
+#'
+#' @export
+quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE) {
+
+  stats <- graphr::stats_count_uni(champ_x) %>%
+    dplyr::group_by(champ_quali) %>%
+    dplyr::mutate(pos = n) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(pct = paste0(format(round(n / n_population * 100, 1), decimal.mark = ","), "%")) %>%
+    dplyr::full_join(dplyr::tibble(champ_quali = factor(levels(champ_x)),
+                                   champ_x = 1:length(levels(champ_x))),
+                     by = "champ_quali") %>%
+    dplyr::arrange(champ_x) %>%
+    dplyr::mutate(n = ifelse(is.na(n), 0, n))
+
+  if (nrow(stats) == 0) {
+    if (is.factor(stats$champ_x)) {
+      stats <- stats %>%
+        dplyr::add_row(champ_x = tail(levels(stats$champ_x), 1),
+                       n = 0)
+    } else {
+      cat("effectif nul")
+      return("")
+    }
+  }
+
+  echelle_y <- dplyr::group_by(stats, champ_x) %>%
+    dplyr::summarise(n = sum(n)) %>%
+    .$n %>%
+    graphr::echelle_integer()
+
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_x, y = n, fill = "")) +
+    ggplot2::geom_area(show.legend = FALSE) +
+    ggplot2::scale_x_continuous(breaks = 1:length(levels(champ_x)), labels = levels(champ_x)) +
+    ggplot2::scale_y_continuous(breaks = echelle_y) +
+    ggplot2::labs(x = NULL, y = NULL) +
+    ggplot2::theme_bw()
+
+  if (label_pourcentage == TRUE) {
+    if (label_pourcentage_saut_ligne == TRUE) {
+      plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = paste0(format(n, big.mark = " "), "\n(", pct,")"), y = pos), size = 3)
+    } else {
+      plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = paste0(format(n, big.mark = " "), " (", pct,")"), y = pos), size = 3)
+    }
+  } else {
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = format(n, big.mark = " "), y = pos), size = 3)
+  }
+
+  texte_repondants <- pct_repondants(identifiant %>% unique() %>% length(), n_graph)
+
+  if (!is.null(texte_repondants)) {
+    plot <- plot +
+      ggplot2::labs(title = texte_repondants) +
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 8, hjust = 1, margin = ggplot2::margin(b = 5)))
+
+  }
+
   return(plot)
 }
 
 #' quali_bi_aires
 #'
-#' @param table
-quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE) {
+#' @param champ_quali \dots
+#' @param champ_x \dots
+#' @param identifiant \dots
+#' @param label_pourcentage \dots
+#' @param position_legende \dots
+#' @param taille_texte_legende \dots
+#' @param nombre_lignes_legende \dots
+#' @param palette_ordinal \dots
+#'
+#' @export
+quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE) {
 
-  if (nrow(table) == 0) {
-    if (class(table$champ_x) != "factor") {
-      table <- table %>%
-        dplyr::add_row(champ_x = tail(levels(table$champ_x), 1),
+  stats <- graphr::stats_count_bi(champ_quali, champ_x, identifiant, complet = TRUE)
+
+  if (position_legende == "droite") {
+    stats <- dplyr::mutate(stats, pos = length(unique(identifiant)) - pos)
+  }
+
+  if (nrow(stats) == 0) {
+    if (is.factor(stats$champ_x)) {
+      stats <- stats %>%
+        dplyr::add_row(champ_x = tail(levels(stats$champ_x), 1),
                        n = 0)
     } else {
       cat("effectif nul")
@@ -62,19 +163,19 @@ quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FA
   }
 
   if (position_legende == "bas") {
-    plot <- ggplot2::ggplot(table, ggplot2::aes(x = champ_x, y = n, fill = factor(champ_quali, levels = rev(levels_quali)), order = rev(champ_quali)))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = n, fill = factor(champ_quali, levels = rev(levels(champ_quali))), order = rev(champ_quali)))
   } else if (position_legende == "droite") {
-    plot <- ggplot2::ggplot(table, ggplot2::aes(x = champ_x, y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = n, fill = champ_quali))
   }
 
-  echelle_y <- dplyr::group_by(table, champ_x) %>%
+  echelle_y <- dplyr::group_by(stats, champ_x) %>%
     dplyr::summarise(n = sum(n)) %>%
     .$n %>%
     graphr::echelle_integer()
 
   plot <- plot +
     ggplot2::geom_area() +
-    ggplot2::scale_x_continuous(breaks = table$champ_x %>% unique, labels = levels_x) +
+    ggplot2::scale_x_continuous(breaks = stats$champ_x %>% as.numeric %>% unique, labels = levels(champ_x)) +
     ggplot2::scale_y_continuous(breaks = echelle_y) +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
@@ -91,9 +192,9 @@ quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FA
   }
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(table, n != 0), stat = "identity", ggplot2::aes(label = paste0(format(n, big.mark = " "), " (", pct,")"), y = pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = paste0(format(n, big.mark = " "), " (", pct,")"), y = pos), size = 3)
   } else {
-    plot <- plot + ggplot2::geom_text(data = subset(table, n != 0), stat = "identity", ggplot2::aes(label = format(n, big.mark = " "), y = pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = format(n, big.mark = " "), y = pos), size = 3)
   }
 
   if (position_legende == "bas") {
@@ -103,31 +204,59 @@ quali_bi_aires <- function(table, levels_x, levels_quali, label_pourcentage = FA
     }
   }
 
+  texte_repondants <- pct_repondants(sum(stats$n), length(champ_quali))
+
+  if (!is.null(texte_repondants)) {
+    plot <- plot +
+      ggplot2::labs(title = texte_repondants) +
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 8, hjust = 1, margin = ggplot2::margin(b = 5)))
+
+  }
+
   return(plot)
 }
 
 #' quali_bi_ordinal
 #'
-#' @param table
-quali_bi_ordinal <- function(table, levels_y, levels_valeur, taille_texte_legende = 1) {
+#' @param champ_quali \dots
+#' @param champ_valeur \dots
+#' @param identifiant \dots
+#' @param taille_texte_legende \dots
+#'
+#' @export
+quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte_legende = 1) {
 
-  if (nrow(table) == 0) {
-    if (class(table$champ_quali) != "factor") {
-      table <- table %>%
-        dplyr::add_row(champ_quali = tail(levels(table$champ_quali), 1),
-                       n = 0)
+  stats <- graphr::stats_count_bi(champ_quali, champ_valeur) %>%
+    dplyr::rename(champ_valeur = champ_x) %>%
+    dplyr::arrange(champ_quali, champ_valeur) %>%
+    dplyr::filter(!is.na(champ_valeur)) %>%
+    dplyr::left_join(group_by(., champ_quali) %>% summarise(total = sum(n)), by = "champ_quali") %>%
+    dplyr::group_by(champ_quali) %>%
+    dplyr::mutate(pct = n / total,
+                  pos1 = cumsum(n),
+                  pos2 = c(0, head(pos1, -1)),
+                  pos3 = pos2 + n / 2,
+                  pos4 = c(head(pos3, 1), diff(pos3)),
+                  pos = pos4 / total)
+
+  if (nrow(stats) == 0) {
+    if (is.factor(stats$champ_quali)) {
+      stats <- stats %>%
+        dplyr::ungroup() %>%
+        dplyr::add_row(champ_quali = tail(levels(stats$champ_quali), 1),
+                       n = 0, total = 0, pct = 0)
     } else {
       cat("effectif nul")
       return("")
     }
   }
 
-  plot <- ggplot2::ggplot(table, ggplot2::aes(x = champ_quali, y = pct, fill = factor(valeur, levels = rev(levels_valeur)))) +
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_quali, y = pct, fill = factor(champ_valeur, levels = rev(levels(champ_valeur))))) +
     ggplot2::geom_col(width = 0.5) +
     ggplot2::scale_fill_brewer() +
     ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = pos, label = format(n, big.mark = " "))) +
-    ggplot2::scale_x_discrete(drop = FALSE, limits = rev(levels_y)) +
-    ggplot2::scale_y_continuous(labels = scales::percent) +
+    ggplot2::scale_x_discrete(drop = FALSE, limits = rev(levels(champ_quali))) +
+    ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
     ggplot2::coord_flip() +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
@@ -137,6 +266,21 @@ quali_bi_ordinal <- function(table, levels_y, levels_valeur, taille_texte_legend
                    legend.text = ggplot2::element_text(size = 8),
                    legend.key.size = ggplot2::unit(taille_texte_legende, 'lines')) +
     ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
+
+  texte_repondants <- dplyr::tibble(champ_quali = champ_quali, champ_valeur = champ_valeur, identifiant = identifiant) %>%
+    group_by(identifiant) %>%
+    summarise(champ_valeur = caractr::paste2(champ_valeur, collapse = "")) %>%
+    ungroup() %>%
+    filter(!is.na(champ_valeur)) %>%
+    nrow() %>%
+    pct_repondants(max(stats$total), .)
+
+  if (!is.null(texte_repondants)) {
+    plot <- plot +
+      ggplot2::labs(title = texte_repondants) +
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 8, hjust = 1, margin = ggplot2::margin(b = 5)))
+
+  }
 
   return(plot)
 }
