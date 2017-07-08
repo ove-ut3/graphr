@@ -4,11 +4,13 @@
 \alias{quali_uni}
 \title{quali_uni}
 \usage{
-quali_uni(champ_quali, choix_multiple = FALSE, choix_multiple_labels = NULL,
-  marge_gauche = FALSE, taille_texte = 3.5)
+quali_uni(champ_quali, max_modalites = NULL, choix_multiple = FALSE,
+  choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5)
 }
 \arguments{
 \item{champ_quali}{\dots}
+
+\item{max_modalites}{\dots}
 
 \item{choix_multiple}{\dots}
 

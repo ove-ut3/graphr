@@ -1,15 +1,16 @@
 #' quali_uni
 #'
 #' @param champ_quali \dots
+#' @param max_modalites \dots
 #' @param choix_multiple \dots
 #' @param choix_multiple_tous \dots
 #' @param marge_gauche \dots
 #' @param taille_texte \dots
 #'
 #' @export
-quali_uni <- function(champ_quali, choix_multiple = FALSE, choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
+quali_uni <- function(champ_quali, max_modalites = NULL, choix_multiple = FALSE, choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
 
-  stats <- stats_count_uni(champ_quali, choix_multiple_labels)
+  stats <- stats_count_uni(champ_quali, max_modalites, choix_multiple_labels)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {

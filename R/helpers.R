@@ -1,20 +1,31 @@
 #' stats_count_uni
 #'
 #' @param champ_quali \dots
+#' @param max_modalites \dots
 #' @param choix_multiple_labels \dots
 #'
 #' @export
-stats_count_uni <- function(champ_quali, choix_multiple_labels = NULL) {
+stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_labels = NULL) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
     dplyr::filter(!is.na(champ_quali)) %>%
-    dplyr::count(champ_quali) %>%
-    dplyr::mutate(pct = paste0(trimws(format(round(n / sum(.$n) * 100, 1), decimal.mark = ",")), "%"))
-
+    dplyr::count(champ_quali)
 
   if (!is.factor(champ_quali)) {
     stats <- dplyr::arrange(stats, -n)
   }
+
+  if (!is.null(max_modalites)) {
+    if (nrow(stats) > max_modalites) {
+      stats <- dplyr::filter(stats, row_number() <= max_modalites - 1) %>%
+        bind_rows(dplyr::tibble(champ_quali = "...",
+                                n = filter(stats, row_number() >= max_modalites) %>%
+                                  .$n %>%
+                                  sum()))
+    }
+  }
+
+  stats <- dplyr::mutate(stats, pct = paste0(trimws(format(round(n / sum(stats$n) * 100, 1), decimal.mark = ",")), "%"))
 
   if (!is.null(choix_multiple_labels)) {
 
