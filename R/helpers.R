@@ -18,8 +18,8 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_la
   if (!is.null(max_modalites)) {
     if (nrow(stats) > max_modalites) {
       stats <- dplyr::filter(stats, row_number() <= max_modalites - 1) %>%
-        bind_rows(dplyr::tibble(champ_quali = "...",
-                                n = filter(stats, row_number() >= max_modalites) %>%
+        dplyr::bind_rows(dplyr::tibble(champ_quali = "...",
+                                n = dplyr::filter(stats, row_number() >= max_modalites) %>%
                                   .$n %>%
                                   sum()))
     }
@@ -34,7 +34,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_la
                               by = c("champ_quali" = "label")) %>%
       dplyr::arrange(-n) %>%
       dplyr::mutate(n = ifelse(is.na(n), 0, n),
-                    ordre = row_number())
+                    ordre = dplyr::row_number(champ_quali))
   }
 
   return(stats)

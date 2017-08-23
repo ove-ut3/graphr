@@ -40,9 +40,9 @@ quali_uni <- function(champ_quali, max_modalites = NULL, choix_multiple = FALSE,
     ggplot2::theme_bw()
 
   if (choix_multiple == TRUE) {
-    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, aes(y = 0.2, hjust = 0, label = ifelse(n >= 1, format(n, big.mark = " "), "")))
+    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = ifelse(n >= 1, format(n, big.mark = " "), "")))
   } else if (choix_multiple == FALSE) {
-    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, aes(y = 0.2, hjust = 0, label = paste0(format(n, big.mark = " "), " (", pct, ")")))
+    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = paste0(format(n, big.mark = " "), " (", pct, ")")))
   }
 
   if (marge_gauche == TRUE) {
@@ -231,7 +231,9 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     dplyr::rename(champ_valeur = champ_x) %>%
     dplyr::arrange(champ_quali, champ_valeur) %>%
     dplyr::filter(!is.na(champ_valeur)) %>%
-    dplyr::left_join(group_by(., champ_quali) %>% summarise(total = sum(n)), by = "champ_quali") %>%
+    dplyr::left_join(dplyr::group_by(., champ_quali) %>%
+                       dplyr::summarise(total = sum(n)),
+                     by = "champ_quali") %>%
     dplyr::group_by(champ_quali) %>%
     dplyr::mutate(pct = n / total,
                   pos1 = cumsum(n),
@@ -269,10 +271,10 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
 
   texte_repondants <- dplyr::tibble(champ_quali = champ_quali, champ_valeur = champ_valeur, identifiant = identifiant) %>%
-    group_by(identifiant) %>%
-    summarise(champ_valeur = caractr::paste2(champ_valeur, collapse = "")) %>%
-    ungroup() %>%
-    filter(!is.na(champ_valeur)) %>%
+    dplyr::group_by(identifiant) %>%
+    dplyr::summarise(champ_valeur = caractr::paste2(champ_valeur, collapse = "")) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(!is.na(champ_valeur)) %>%
     nrow() %>%
     pct_repondants(max(stats$total), .)
 
