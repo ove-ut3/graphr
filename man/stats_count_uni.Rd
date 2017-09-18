@@ -17,3 +17,4 @@ stats_count_uni(champ_quali, max_modalites = NULL,
 \description{
 stats_count_uni
 }
+\keyword{internal}

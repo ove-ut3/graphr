@@ -18,3 +18,4 @@ stats_count_bi(champ_quali, champ_x, identifiant = NULL, complet = FALSE)
 \description{
 stats_count_bi
 }
+\keyword{internal}

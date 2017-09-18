@@ -14,3 +14,4 @@ echelle_integer(champ, n = 5)
 \description{
 echelle_integer
 }
+\keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{pct_repondants}
 \alias{pct_repondants}
-\title{n_repondants}
+\title{pct_repondants}
 \usage{
 pct_repondants(repondants, total)
 }
@@ -12,6 +12,6 @@ pct_repondants(repondants, total)
 \item{stats}{\dots}
 }
 \description{
-n_repondants
+pct_repondants
 }
 \keyword{internal}

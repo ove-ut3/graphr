@@ -5,6 +5,7 @@
 #' @param choix_multiple_labels \dots
 #'
 #' @export
+#' @keywords internal
 stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_labels = NULL) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
@@ -48,6 +49,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_la
 #' @param complet \dots
 #'
 #' @export
+#' @keywords internal
 stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = FALSE) {
 
   stats <- dplyr::tibble(champ_x = champ_x, champ_quali = champ_quali) %>%
@@ -72,11 +74,12 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
 
 }
 
-#' n_repondants
+#' pct_repondants
 #'
 #' @param table \dots
 #' @param stats \dots
 #'
+#' @export
 #' @keywords internal
 pct_repondants <- function(repondants, total) {
 
@@ -96,6 +99,7 @@ pct_repondants <- function(repondants, total) {
 #' @param n \dots
 #'
 #' @export
+#' @keywords internal
 echelle_integer <- function(champ, n = 5) {
 
   if (length(champ) == 0) return(champ)
