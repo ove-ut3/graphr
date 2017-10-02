@@ -21,12 +21,12 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_la
       stats <- dplyr::filter(stats, row_number() <= max_modalites - 1) %>%
         dplyr::bind_rows(dplyr::tibble(champ_quali = "...",
                                 n = dplyr::filter(stats, row_number() >= max_modalites) %>%
-                                  .$n %>%
+                                  dplyr::pull(n) %>%
                                   sum()))
     }
   }
 
-  stats <- dplyr::mutate(stats, pct = paste0(trimws(format(round(n / sum(stats$n) * 100, 1), decimal.mark = ",")), "%"))
+  stats <- dplyr::mutate(stats, pct = paste0(trimws(format(round(n / sum(stats$n) * 100, 1))), "%"))
 
   if (!is.null(choix_multiple_labels)) {
 
@@ -63,7 +63,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
     complet <- expand.grid(factor(levels(champ_x), levels(champ_x)), factor(levels(champ_quali), levels(champ_quali)))
     names(complet) <- c("champ_x", "champ_quali")
 
-    stats <- dplyr::mutate(stats, pct = paste0(trimws(format(round(n / length(unique(identifiant)) * 100, 1), decimal.mark = ",")), "%")) %>%
+    stats <- dplyr::mutate(stats, pct = paste0(trimws(format(round(n / length(unique(identifiant)) * 100, 1))), "%")) %>%
       dplyr::full_join(complet, by = c("champ_x", "champ_quali")) %>%
       dplyr::arrange(champ_x, champ_quali) %>%
       dplyr::mutate(n = ifelse(is.na(n), 0, n))
@@ -84,7 +84,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
 pct_repondants <- function(repondants, total) {
 
   if (repondants != total) {
-    n_repondants <- paste0("Répondants : ", repondants, " (", format(round(repondants / total * 100, 1), decimal.mark = ","), " %)")
+    n_repondants <- paste0("Répondants : ", repondants, " (", format(round(repondants / total * 100, 1)), " %)")
   } else {
     n_repondants <- NULL
   }

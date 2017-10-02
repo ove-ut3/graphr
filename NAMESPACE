@@ -3,6 +3,7 @@
 export(echelle_integer)
 export(pct_repondants)
 export(quali_bi_aires)
+export(quali_bi_aires2)
 export(quali_bi_ordinal)
 export(quali_uni)
 export(quali_uni_aires)
