@@ -25,7 +25,7 @@ quali_uni <- function(champ_quali, max_modalites = NULL, choix_multiple = FALSE,
 
   if (!is.factor(stats$champ_quali)) {
     if (is.null(stats[["ordre"]])) {
-      stats <- dplyr::mutate(stats, ordre = dplyr::row_number(n))
+      stats <- dplyr::mutate(stats, ordre = -row_number())
     }
     plot <- ggplot2::ggplot(stats, ggplot2::aes(x = reorder(champ_quali, ordre), y = n, fill = champ_quali))
   } else {
@@ -160,7 +160,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
 
   if (!is.factor(stats$champ_quali)) {
     if (is.null(stats[["ordre"]])) {
-      stats <- dplyr::mutate(stats, ordre = dplyr::row_number(n))
+      stats <- dplyr::mutate(stats, ordre = -row_number())
     }
     plot <- ggplot2::ggplot(stats, ggplot2::aes(x = reorder(champ_quali, ordre), y = n, fill = champ_quali))
   } else {

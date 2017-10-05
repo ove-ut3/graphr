@@ -35,7 +35,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_la
                               by = c("champ_quali" = "label")) %>%
       dplyr::arrange(-n) %>%
       dplyr::mutate(n = ifelse(is.na(n), 0, n),
-                    ordre = dplyr::row_number(champ_quali))
+                    ordre = -row_number())
   }
 
   return(stats)
