@@ -10,6 +10,11 @@
 #' @export
 quali_uni <- function(champ_quali, max_modalites = NULL, choix_multiple = FALSE, choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
 
+  if (length(champ_quali) == 0) {
+    cat("effectif nul")
+    return("")
+  }
+
   stats <- graphr::stats_count_uni(champ_quali, max_modalites, choix_multiple_labels)
 
   if (nrow(stats) == 0) {
@@ -63,6 +68,10 @@ quali_uni <- function(champ_quali, max_modalites = NULL, choix_multiple = FALSE,
 
   }
 
+  # plot <- plot +
+  #   ggplot2::theme(plot.background = ggplot2::element_rect(fill = "transparent", colour = NA),
+  #                  panel.background = ggplot2::element_rect(fill = "transparent", colour = NA))
+
   return(plot)
 
 }
@@ -78,6 +87,11 @@ quali_uni <- function(champ_quali, max_modalites = NULL, choix_multiple = FALSE,
 #'
 #' @export
 quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE) {
+
+  if (length(champ_x) == 0) {
+    cat("effectif nul")
+    return("")
+  }
 
   stats <- graphr::stats_count_uni(champ_x) %>%
     dplyr::group_by(champ_quali) %>%
@@ -145,6 +159,11 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 #' @export
 quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
 
+  if (length(champ_quali) == 0) {
+    cat("effectif nul")
+    return("")
+  }
+
   stats <- graphr::stats_count_uni(champ_quali, max_modalites = max_modalites)
 
   if (nrow(stats) == 0) {
@@ -209,6 +228,11 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
 #'
 #' @export
 quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE) {
+
+  if (length(champ_quali) == 0) {
+    cat("effectif nul")
+    return("")
+  }
 
   stats <- graphr::stats_count_bi(champ_quali, champ_x, identifiant, complet = TRUE)
 
@@ -293,6 +317,11 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
 #'
 #' @export
 quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE) {
+
+  if (length(champ_quali) == 0) {
+    cat("effectif nul")
+    return("")
+  }
 
   stats <- dplyr::tibble(champ_x = champ_x, champ_quali = champ_quali)
 
@@ -380,6 +409,11 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
 #'
 #' @export
 quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte_legende = 1) {
+
+  if (length(champ_quali) == 0) {
+    cat("effectif nul")
+    return("")
+  }
 
   stats <- graphr::stats_count_bi(champ_quali, champ_valeur) %>%
     dplyr::rename(champ_valeur = champ_x) %>%
