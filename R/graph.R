@@ -186,7 +186,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
     plot <- ggplot2::ggplot(stats, ggplot2::aes(x = factor(champ_quali, levels = rev(levels(champ_quali))), y = n, fill = champ_quali))
   }
 
-  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = "", y = n, fill = champ_quali)) +
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = "", y = rev(n), fill = champ_quali)) +
     ggplot2::geom_bar(show.legend = FALSE, width = 1, stat = "identity") +
     ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = paste0(champ_quali, "\n", format(n, big.mark = " "), " (", pct, ")"))) +
     ggplot2::coord_polar("y", start = 0) +
