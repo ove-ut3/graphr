@@ -19,7 +19,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_la
   if (!is.null(max_modalites)) {
     if (nrow(stats) > max_modalites) {
       stats <- dplyr::filter(stats, row_number() <= max_modalites - 1) %>%
-        dplyr::bind_rows(dplyr::tibble(champ_quali = "...",
+        dplyr::bind_rows(dplyr::tibble(champ_quali = "Autres modalités",
                                 n = dplyr::filter(stats, row_number() >= max_modalites) %>%
                                   dplyr::pull(n) %>%
                                   sum()))
