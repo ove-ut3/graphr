@@ -187,14 +187,28 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
   }
 
   plot <- ggplot2::ggplot(stats, ggplot2::aes(x = "", y = rev(n), fill = champ_quali)) +
-    ggplot2::geom_bar(show.legend = FALSE, width = 1, stat = "identity") +
-    ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = paste0(champ_quali, "\n", format(n, big.mark = " "), " (", pct, ")"))) +
+    ggplot2::geom_bar(show.legend = FALSE, width = 1, stat = "identity")
+
+  if (effectif == TRUE) {
+    plot <- plot +
+      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = paste0(champ_quali, "\n", format(n, big.mark = " "), " (", pct, ")")))
+  } else {
+    plot <- plot +
+      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = paste0(champ_quali, "\n", pct)))
+  }
+
+  plot <- plot +
     ggplot2::coord_polar("y", start = 0) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank(),
                    axis.text.y = ggplot2::element_blank(),
                    axis.text.x = ggplot2::element_blank(),
                    panel.grid = ggplot2::element_blank(),
                    panel.background = ggplot2::element_blank())
+
+  if (marges == FALSE) {
+    plot <- plot +
+      ggplot2::theme(plot.margin = ggplot2::margin(t = -1, r = -1, b = -1, l = -1, unit = "cm"))
+  }
 
   if (marge_gauche == TRUE) {
     plot <- plot + ggplot2::labs(x = "", y = NULL)
