@@ -2,11 +2,12 @@
 #'
 #' @param champ_quali \dots
 #' @param max_modalites \dots
+#' @param lib_modalite_autre \dots
 #' @param choix_multiple_labels \dots
 #'
 #' @export
 #' @keywords internal
-stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_labels = NULL) {
+stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple_labels = NULL) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
     dplyr::filter(!is.na(champ_quali)) %>%
@@ -19,14 +20,14 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, choix_multiple_la
   if (!is.null(max_modalites)) {
     if (nrow(stats) > max_modalites) {
       stats <- dplyr::filter(stats, row_number() <= max_modalites - 1) %>%
-        dplyr::bind_rows(dplyr::tibble(champ_quali = "Autres modalités",
+        dplyr::bind_rows(dplyr::tibble(champ_quali = ifelse(!is.null(lib_modalite_autre), lib_modalite_autre, "Autres modalités"),
                                 n = dplyr::filter(stats, row_number() >= max_modalites) %>%
                                   dplyr::pull(n) %>%
                                   sum()))
     }
   }
 
-  stats <- dplyr::mutate(stats, pct = paste0(trimws(format(round(n / sum(stats$n) * 100, 1))), "%"))
+  stats <- dplyr::mutate(stats, pct = caractr::lib_pourcentage(n / sum(stats$n)))
 
   if (!is.null(choix_multiple_labels)) {
 
@@ -55,7 +56,8 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
   stats <- dplyr::tibble(champ_x = champ_x, champ_quali = champ_quali) %>%
     dplyr::count(champ_x, champ_quali) %>%
     dplyr::group_by(champ_x) %>%
-    dplyr::mutate(pos = cumsum(n) - 0.5 * n) %>%
+    dplyr::mutate(pos = cumsum(n) - 0.5 * n,
+                  pct = caractr::lib_pourcentage(n / sum(n, na.rm = TRUE))) %>%
     dplyr::ungroup()
 
   if (complet == TRUE) {

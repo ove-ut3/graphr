@@ -2,20 +2,21 @@
 #'
 #' @param champ_quali \dots
 #' @param max_modalites \dots
+#' @param lib_modalite_autre \dots
 #' @param choix_multiple \dots
 #' @param choix_multiple_tous \dots
 #' @param marge_gauche \dots
 #' @param taille_texte \dots
 #'
 #' @export
-quali_uni <- function(champ_quali, max_modalites = NULL, choix_multiple = FALSE, choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
+quali_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
     return("")
   }
 
-  stats <- graphr::stats_count_uni(champ_quali, max_modalites, choix_multiple_labels)
+  stats <- graphr::stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple_labels)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
@@ -154,10 +155,12 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 #' @param champ_quali \dots
 #' @param max_modalites \dots
 #' @param marge_gauche \dots
+#' @param effectif \dots
 #' @param taille_texte \dots
+#' @param marges \dots
 #'
 #' @export
-quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
+quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, effectif = TRUE, taille_texte = 3.5, marges = TRUE) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
