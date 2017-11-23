@@ -10,7 +10,7 @@
 stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple_labels = NULL) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
-    dplyr::filter(!is.na(champ_quali)) %>%
+    tidyr::drop_na(champ_quali) %>%
     dplyr::count(champ_quali)
 
   if (!is.factor(champ_quali)) {

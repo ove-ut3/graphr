@@ -435,7 +435,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
   stats <- graphr::stats_count_bi(champ_quali, champ_valeur) %>%
     dplyr::rename(champ_valeur = champ_x) %>%
     dplyr::arrange(champ_quali, champ_valeur) %>%
-    dplyr::filter(!is.na(champ_valeur)) %>%
+    tidyr::drop_na(champ_valeur) %>%
     dplyr::left_join(dplyr::group_by(., champ_quali) %>%
                        dplyr::summarise(total = sum(n)),
                      by = "champ_quali") %>%
@@ -479,7 +479,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     dplyr::group_by(identifiant) %>%
     dplyr::summarise(champ_valeur = caractr::paste2(champ_valeur, collapse = "")) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(!is.na(champ_valeur)) %>%
+    tidyr::drop_na(champ_valeur) %>%
     nrow() %>%
     graphr::pct_repondants(max(stats$total), .)
 
