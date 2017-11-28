@@ -3,21 +3,27 @@
 #' @param champ_quali \dots
 #' @param max_modalites \dots
 #' @param lib_modalite_autre \dots
-#' @param choix_multiple_labels \dots
+#' @param choix_multiple \dots
 #'
 #' @export
 #' @keywords internal
-stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple_labels = NULL) {
+stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
     tidyr::drop_na(champ_quali) %>%
     dplyr::count(champ_quali)
 
-  if (!is.factor(champ_quali)) {
+  if (!is.null(max_modalites) | !is.na(choix_multiple)) {
+    stats <- stats %>%
+      dplyr::mutate(champ_quali = as.character(champ_quali))
+  }
+
+  if (!is.factor(stats$champ_quali)) {
     stats <- dplyr::arrange(stats, -n)
   }
 
   if (!is.null(max_modalites)) {
+
     if (nrow(stats) > max_modalites) {
       stats <- dplyr::filter(stats, row_number() <= max_modalites - 1) %>%
         dplyr::bind_rows(dplyr::tibble(champ_quali = ifelse(!is.null(lib_modalite_autre), lib_modalite_autre, "Autres modalités"),
@@ -29,11 +35,9 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
 
   stats <- dplyr::mutate(stats, pct = caractr::lib_pourcentage(n / sum(stats$n)))
 
-  if (!is.null(choix_multiple_labels)) {
+  if (choix_multiple == TRUE) {
 
-    stats <- dplyr::full_join(stats,
-                              dplyr::tibble(label = choix_multiple_labels),
-                              by = c("champ_quali" = "label")) %>%
+    stats <- stats %>%
       dplyr::arrange(-n) %>%
       dplyr::mutate(n = ifelse(is.na(n), 0, n),
                     ordre = -row_number())

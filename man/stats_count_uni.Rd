@@ -5,7 +5,7 @@
 \title{stats_count_uni}
 \usage{
 stats_count_uni(champ_quali, max_modalites = NULL,
-  lib_modalite_autre = NULL, choix_multiple_labels = NULL)
+  lib_modalite_autre = NULL, choix_multiple = FALSE)
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -14,7 +14,7 @@ stats_count_uni(champ_quali, max_modalites = NULL,
 
 \item{lib_modalite_autre}{\dots}
 
-\item{choix_multiple_labels}{\dots}
+\item{choix_multiple}{\dots}
 }
 \description{
 stats_count_uni

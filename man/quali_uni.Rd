@@ -5,8 +5,7 @@
 \title{quali_uni}
 \usage{
 quali_uni(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL,
-  choix_multiple = FALSE, choix_multiple_labels = NULL,
-  marge_gauche = FALSE, taille_texte = 3.5)
+  choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5)
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -20,8 +19,6 @@ quali_uni(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL,
 \item{marge_gauche}{\dots}
 
 \item{taille_texte}{\dots}
-
-\item{choix_multiple_tous}{\dots}
 }
 \description{
 quali_uni

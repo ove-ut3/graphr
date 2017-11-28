@@ -4,19 +4,18 @@
 #' @param max_modalites \dots
 #' @param lib_modalite_autre \dots
 #' @param choix_multiple \dots
-#' @param choix_multiple_tous \dots
 #' @param marge_gauche \dots
 #' @param taille_texte \dots
 #'
 #' @export
-quali_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, choix_multiple_labels = NULL, marge_gauche = FALSE, taille_texte = 3.5) {
+quali_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
     return("")
   }
 
-  stats <- graphr::stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple_labels)
+  stats <- graphr::stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
