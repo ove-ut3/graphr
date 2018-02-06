@@ -1,6 +1,7 @@
 #' quali_uni
 #'
 #' @param champ_quali \dots
+#' @param lib_pct \dots
 #' @param max_modalites \dots
 #' @param lib_modalite_autre \dots
 #' @param choix_multiple \dots
@@ -8,7 +9,7 @@
 #' @param taille_texte \dots
 #'
 #' @export
-quali_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5) {
+quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
@@ -44,10 +45,12 @@ quali_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NU
     ggplot2::coord_flip() +
     ggplot2::theme_bw()
 
-  if (choix_multiple == TRUE) {
+  if (lib_pct == FALSE | choix_multiple == TRUE) {
     plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = ifelse(n >= 1, format(n, big.mark = " "), "")))
-  } else if (choix_multiple == FALSE) {
+
+  } else {
     plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = paste0(format(n, big.mark = " "), " (", pct, ")")))
+
   }
 
   plot <- plot +
