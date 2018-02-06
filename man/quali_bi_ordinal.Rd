@@ -4,7 +4,7 @@
 \alias{quali_bi_ordinal}
 \title{quali_bi_ordinal}
 \usage{
-quali_bi_ordinal(champ_quali, champ_valeur, identifiant,
+quali_bi_ordinal(champ_quali, champ_valeur, identifiant, taille_texte = 3,
   taille_texte_legende = 1)
 }
 \arguments{
@@ -13,6 +13,8 @@ quali_bi_ordinal(champ_quali, champ_valeur, identifiant,
 \item{champ_valeur}{\dots}
 
 \item{identifiant}{\dots}
+
+\item{taille_texte}{\dots}
 
 \item{taille_texte_legende}{\dots}
 }

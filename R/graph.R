@@ -424,10 +424,11 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
 #' @param champ_quali \dots
 #' @param champ_valeur \dots
 #' @param identifiant \dots
+#' @param taille_texte \dots
 #' @param taille_texte_legende \dots
 #'
 #' @export
-quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte_legende = 1) {
+quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
