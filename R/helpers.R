@@ -13,7 +13,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
     tidyr::drop_na(champ_quali) %>%
     dplyr::count(champ_quali)
 
-  if (!is.null(max_modalites) | !is.na(choix_multiple)) {
+  if (!is.null(max_modalites) | choix_multiple == TRUE) {
     stats <- stats %>%
       dplyr::mutate(champ_quali = as.character(champ_quali))
   }
