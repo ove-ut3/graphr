@@ -6,7 +6,8 @@
 \usage{
 quali_bi_aires2(champ_quali, champ_x, label_effectif = FALSE,
   position_legende = "bas", taille_texte_legende = 1,
-  nombre_lignes_legende = NULL, palette_ordinal = FALSE)
+  taille_texte_axe_x = 1, nombre_lignes_legende = NULL,
+  palette_ordinal = FALSE)
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -18,6 +19,8 @@ quali_bi_aires2(champ_quali, champ_x, label_effectif = FALSE,
 \item{position_legende}{\dots}
 
 \item{taille_texte_legende}{\dots}
+
+\item{taille_texte_axe_x}{\dots}
 
 \item{nombre_lignes_legende}{\dots}
 

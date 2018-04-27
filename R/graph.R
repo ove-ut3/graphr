@@ -12,8 +12,8 @@
 quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5) {
 
   if (length(champ_quali) == 0) {
-    cat("effectif nul")
-    return("")
+    cat("Effectif nul")
+    return(invisible(NULL))
   }
 
   stats <- graphr::stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple)
@@ -24,8 +24,8 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
         dplyr::add_row(champ_quali = tail(levels(stats$champ_quali), 1),
                        n = 0)
     } else {
-      cat("effectif nul")
-      return("")
+      cat("Effectif nul")
+      return(invisible(NULL))
     }
   }
 
@@ -331,11 +331,12 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
 #' @param label_effectif \dots
 #' @param position_legende \dots
 #' @param taille_texte_legende \dots
+#' @param taille_texte_axe_x \dots
 #' @param nombre_lignes_legende \dots
 #' @param palette_ordinal \dots
 #'
 #' @export
-quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE) {
+quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, position_legende = "bas", taille_texte_legende = 1, taille_texte_axe_x = 9, nombre_lignes_legende = NULL, palette_ordinal = FALSE) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
@@ -386,7 +387,8 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
                    legend.key.size = ggplot2::unit(taille_texte_legende, 'lines'),
                    legend.text = ggplot2::element_text(size = 8),
                    legend.position = dplyr::recode(position_legende, "bas" = "bottom", "droite" = "right"),
-                   legend.box.spacing = ggplot2::unit(1, "mm"))
+                   legend.box.spacing = ggplot2::unit(1, "mm"),
+                   axis.text.x = ggplot2::element_text(size = taille_texte_axe_x))
 
   if (palette_ordinal == TRUE) {
     plot <- plot + ggplot2::scale_fill_brewer()
