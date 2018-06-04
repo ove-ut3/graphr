@@ -3,6 +3,7 @@
 export("%>%")
 export(echelle_integer)
 export(pct_repondants)
+export(quali_bi)
 export(quali_bi_aires)
 export(quali_bi_ordinal)
 export(quali_uni)

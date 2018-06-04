@@ -416,3 +416,72 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
 
   return(plot)
 }
+
+#' quali_bi
+#'
+#' @param champ_quali \dots
+#' @param champ_valeur \dots
+#' @param identifiant \dots
+#' @param taille_texte \dots
+#' @param taille_texte_legende \dots
+#' @param orientation \dots
+#' @param label_pourcentage \dots
+#'
+#' @export
+quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE) {
+
+  if (length(champ_quali) == 0) {
+    cat("effectif nul")
+    return("")
+  }
+
+  stats <- graphr::stats_count_bi(champ_valeur, champ_quali, identifiant)
+
+  if (nrow(stats) == 0) {
+    if (is.factor(stats$champ_x)) {
+      stats <- stats %>%
+        dplyr::add_row(champ_x = tail(levels(stats$champ_x), 1),
+                       n = 0)
+    } else {
+      cat("effectif nul")
+      return("")
+    }
+  }
+
+  echelle_y <- dplyr::group_by(stats, champ_x) %>%
+    dplyr::summarise(n = sum(n)) %>%
+    dplyr::pull(n) %>%
+    graphr::echelle_integer()
+
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_x, y = n, fill = factor(champ_quali, levels = rev(levels(champ_quali))))) +
+    ggplot2::geom_col(width = 0.5) +
+    ggplot2::scale_fill_discrete(direction = -1) +
+    ggplot2::scale_y_continuous(breaks = echelle_y)
+
+  if (label_pourcentage == TRUE) {
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "identity", size = 3, ggplot2::aes(y = pos, label = paste0(format(n, big.mark = " "), " (", caractr::lib_pourcentage(pct),")")))
+  } else {
+    plot <- plot + ggplot2::geom_text(position = "identity", size = 3, ggplot2::aes(y = pos, label = format(n, big.mark = " ")))
+  }
+
+  if (orientation == "horizontal") {
+    plot <- plot +
+      ggplot2::scale_x_discrete(drop = FALSE, limits = rev(levels(champ_x))) +
+      ggplot2::coord_flip()
+
+  } else if (orientation == "vertical") {
+    plot <- plot + ggplot2::scale_x_discrete(drop = FALSE, limits = levels(champ_quali))
+  }
+
+  plot <- plot +
+    ggplot2::labs(x = NULL, y = NULL) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(legend.title = ggplot2::element_blank(),
+                   legend.position = "bottom",
+                   legend.box.spacing = ggplot2::unit(1, "mm"),
+                   legend.text = ggplot2::element_text(size = 8),
+                   legend.key.size = ggplot2::unit(taille_texte_legende, 'lines')) +
+    ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
+
+  return(plot)
+}
