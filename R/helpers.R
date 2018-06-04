@@ -58,7 +58,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
 stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = FALSE) {
 
   stats <- dplyr::tibble(champ_x = champ_x, champ_quali = champ_quali) %>%
-    dplyr::count(champ_x, champ_quali) %>%
+    dplyr::count(champ_quali, champ_x) %>%
     dplyr::group_by(champ_x) %>%
     dplyr::mutate(pos = cumsum(n) - 0.5 * n,
                   pct = caractr::lib_pourcentage(n / sum(n, na.rm = TRUE))) %>%
