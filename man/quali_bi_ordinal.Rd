@@ -5,7 +5,8 @@
 \title{quali_bi_ordinal}
 \usage{
 quali_bi_ordinal(champ_quali, champ_valeur, identifiant, taille_texte = 3,
-  taille_texte_legende = 1)
+  taille_texte_legende = 1, orientation = "horizontal",
+  label_pourcentage = FALSE)
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -17,6 +18,10 @@ quali_bi_ordinal(champ_quali, champ_valeur, identifiant, taille_texte = 3,
 \item{taille_texte}{\dots}
 
 \item{taille_texte_legende}{\dots}
+
+\item{orientation}{\dots}
+
+\item{label_pourcentage}{\dots}
 }
 \description{
 quali_bi_ordinal

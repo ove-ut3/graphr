@@ -428,9 +428,11 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
 #' @param identifiant \dots
 #' @param taille_texte \dots
 #' @param taille_texte_legende \dots
+#' @param orientation \dots
+#' @param label_pourcentage \dots
 #'
 #' @export
-quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1) {
+quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
@@ -467,10 +469,24 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
   plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_quali, y = pct, fill = factor(champ_valeur, levels = rev(levels(champ_valeur))))) +
     ggplot2::geom_col(width = 0.5) +
     ggplot2::scale_fill_brewer() +
-    ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = pos, label = format(n, big.mark = " "))) +
-    ggplot2::scale_x_discrete(drop = FALSE, limits = rev(levels(champ_quali))) +
-    ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
-    ggplot2::coord_flip() +
+    ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
+
+  if (label_pourcentage == TRUE) {
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(format(n, big.mark = " "), " (", caractr::lib_pourcentage(pct),")")))
+  } else {
+    plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = pos, label = format(n, big.mark = " ")))
+  }
+
+  if (orientation == "horizontal") {
+    plot <- plot +
+      ggplot2::scale_x_discrete(drop = FALSE, limits = rev(levels(champ_quali))) +
+      ggplot2::coord_flip()
+
+  } else if (orientation == "vertical") {
+    plot <- plot + ggplot2::scale_x_discrete(drop = FALSE, limits = levels(champ_quali))
+  }
+
+  plot <- plot +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.title = ggplot2::element_blank(),
