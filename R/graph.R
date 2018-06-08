@@ -435,6 +435,11 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
     return("")
   }
 
+  if (length(na.omit(champ_valeur)) == 0) {
+    cat("Aucune donnée non-nulle")
+    return("")
+  }
+
   stats <- graphr::stats_count_bi(champ_valeur, champ_quali, identifiant)
 
   if (nrow(stats) == 0) {
