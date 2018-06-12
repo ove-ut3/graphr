@@ -4,10 +4,11 @@
 #' @param max_modalites \dots
 #' @param lib_modalite_autre \dots
 #' @param choix_multiple \dots
+#' @param pct_arrondi \dots
 #'
 #' @export
 #' @keywords internal
-stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE) {
+stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, pct_arrondi = 1) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
     tidyr::drop_na(champ_quali) %>%
@@ -33,7 +34,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
     }
   }
 
-  stats <- dplyr::mutate(stats, pct = caractr::lib_pourcentage(n / sum(stats$n)))
+  stats <- dplyr::mutate(stats, pct = caractr::lib_pourcentage(n / sum(stats$n), decimales = pct_arrondi))
 
   if (choix_multiple == TRUE) {
 

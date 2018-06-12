@@ -5,7 +5,7 @@
 \title{quali_uni_secteurs}
 \usage{
 quali_uni_secteurs(champ_quali, max_modalites = NULL, marge_gauche = FALSE,
-  effectif = TRUE, taille_texte = 3.5, marges = TRUE)
+  effectif = TRUE, taille_texte = 3.5, marges = TRUE, pct_arrondi = 1)
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -19,6 +19,8 @@ quali_uni_secteurs(champ_quali, max_modalites = NULL, marge_gauche = FALSE,
 \item{taille_texte}{\dots}
 
 \item{marges}{\dots}
+
+\item{pct_arrondi}{\dots}
 }
 \description{
 quali_uni_secteurs

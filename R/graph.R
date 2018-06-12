@@ -160,16 +160,17 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 #' @param effectif \dots
 #' @param taille_texte \dots
 #' @param marges \dots
+#' @param pct_arrondi \dots
 #'
 #' @export
-quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, effectif = TRUE, taille_texte = 3.5, marges = TRUE) {
+quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, effectif = TRUE, taille_texte = 3.5, marges = TRUE, pct_arrondi = 1) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
     return("")
   }
 
-  stats <- graphr::stats_count_uni(champ_quali, max_modalites = max_modalites)
+  stats <- graphr::stats_count_uni(champ_quali, max_modalites = max_modalites, pct_arrondi = pct_arrondi)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
