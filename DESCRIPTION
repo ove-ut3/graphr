@@ -14,4 +14,4 @@ Imports:
   dplyr,
   ggplot2,
   scales
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

@@ -5,8 +5,8 @@
 \title{quali_uni}
 \usage{
 quali_uni(champ_quali, lib_pct = TRUE, max_modalites = NULL,
-  lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE,
-  taille_texte = 3.5)
+  lib_modalite_autre = NULL, choix_multiple = FALSE,
+  marge_gauche = FALSE, taille_texte = 3.5)
 }
 \arguments{
 \item{champ_quali}{\dots}

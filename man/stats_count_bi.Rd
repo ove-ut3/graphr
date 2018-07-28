@@ -4,7 +4,8 @@
 \alias{stats_count_bi}
 \title{stats_count_bi}
 \usage{
-stats_count_bi(champ_quali, champ_x, identifiant = NULL, complet = FALSE)
+stats_count_bi(champ_quali, champ_x, identifiant = NULL,
+  complet = FALSE)
 }
 \arguments{
 \item{champ_quali}{\dots}

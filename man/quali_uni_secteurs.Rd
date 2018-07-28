@@ -4,8 +4,9 @@
 \alias{quali_uni_secteurs}
 \title{quali_uni_secteurs}
 \usage{
-quali_uni_secteurs(champ_quali, max_modalites = NULL, marge_gauche = FALSE,
-  effectif = TRUE, taille_texte = 3.5, marges = TRUE, pct_arrondi = 1)
+quali_uni_secteurs(champ_quali, max_modalites = NULL,
+  marge_gauche = FALSE, effectif = TRUE, taille_texte = 3.5,
+  marges = TRUE, pct_arrondi = 1)
 }
 \arguments{
 \item{champ_quali}{\dots}
