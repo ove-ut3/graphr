@@ -402,7 +402,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
 
   texte_repondants <- dplyr::tibble(champ_quali = champ_quali, champ_valeur = champ_valeur, identifiant = identifiant) %>%
     dplyr::group_by(identifiant) %>%
-    dplyr::summarise(champ_valeur = caractr::paste2(champ_valeur, collapse = "")) %>%
+    dplyr::summarise(champ_valeur = caractr::str_paste(champ_valeur, collapse = "")) %>%
     dplyr::ungroup() %>%
     tidyr::drop_na(champ_valeur) %>%
     nrow() %>%
