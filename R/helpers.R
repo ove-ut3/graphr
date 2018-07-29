@@ -34,7 +34,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
     }
   }
 
-  stats <- dplyr::mutate(stats, pct = caractr::lib_pourcentage(n / sum(stats$n), decimales = pct_arrondi))
+  stats <- dplyr::mutate(stats, pct = caractr::str_percent(n / sum(stats$n), digits = pct_arrondi))
 
   if (choix_multiple == TRUE) {
 
@@ -63,7 +63,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
     dplyr::count(champ_quali, champ_x) %>%
     dplyr::group_by(champ_x) %>%
     dplyr::mutate(pos = cumsum(n) - 0.5 * n,
-                  pct = caractr::lib_pourcentage(n / sum(n, na.rm = TRUE))) %>%
+                  pct = caractr::str_percent(n / sum(n, na.rm = TRUE))) %>%
     dplyr::ungroup()
 
   if (complet == TRUE) {

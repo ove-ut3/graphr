@@ -376,7 +376,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(format(n, big.mark = " "), " (", caractr::lib_pourcentage(pct),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(format(n, big.mark = " "), " (", caractr::str_percent(pct),")")))
   } else {
     plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = pos, label = format(n, big.mark = " ")))
   }
@@ -465,7 +465,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
     ggplot2::scale_y_continuous(breaks = echelle_y)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "identity", size = 3, ggplot2::aes(y = pos, label = paste0(format(n, big.mark = " "), " (", caractr::lib_pourcentage(pct),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "identity", size = 3, ggplot2::aes(y = pos, label = paste0(format(n, big.mark = " "), " (", caractr::str_percent(pct),")")))
   } else {
     plot <- plot + ggplot2::geom_text(position = "identity", size = 3, ggplot2::aes(y = pos, label = format(n, big.mark = " ")))
   }
