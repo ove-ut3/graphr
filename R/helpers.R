@@ -1,12 +1,3 @@
-#' stats_count_uni
-#'
-#' @param champ_quali \dots
-#' @param max_modalites \dots
-#' @param lib_modalite_autre \dots
-#' @param choix_multiple \dots
-#' @param pct_arrondi \dots
-#'
-#' @export
 #' @keywords internal
 stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, pct_arrondi = 1) {
 
@@ -47,14 +38,6 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
   return(stats)
 }
 
-#' stats_count_bi
-#'
-#' @param champ_quali \dots
-#' @param champ_x \dots
-#' @param identifiant \dots
-#' @param complet \dots
-#'
-#' @export
 #' @keywords internal
 stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = FALSE) {
 
@@ -82,12 +65,6 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
 
 }
 
-#' pct_repondants
-#'
-#' @param table \dots
-#' @param stats \dots
-#'
-#' @export
 #' @keywords internal
 pct_repondants <- function(repondants, total) {
 
@@ -101,12 +78,6 @@ pct_repondants <- function(repondants, total) {
 
 }
 
-#' echelle_integer
-#'
-#' @param champ \dots
-#' @param n \dots
-#'
-#' @export
 #' @keywords internal
 echelle_integer <- function(champ, n = 5) {
 
