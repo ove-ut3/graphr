@@ -16,7 +16,7 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
     return(invisible(NULL))
   }
 
-  stats <- graphr::stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple)
+  stats <- stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
@@ -41,7 +41,7 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
   plot <- plot +
     ggplot2::geom_col(show.legend = FALSE, width = 0.5) +
     ggplot2::scale_x_discrete(drop = FALSE) +
-    ggplot2::scale_y_continuous(breaks = graphr::echelle_integer(stats$n)) +
+    ggplot2::scale_y_continuous(breaks = echelle_integer(stats$n)) +
     ggplot2::coord_flip() +
     ggplot2::theme_bw()
 
@@ -62,7 +62,7 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
     plot <- plot + ggplot2::labs(x = NULL, y = NULL)
   }
 
-  texte_repondants <- graphr::pct_repondants(sum(stats$n), length(champ_quali))
+  texte_repondants <- pct_repondants(sum(stats$n), length(champ_quali))
 
   if (!is.null(texte_repondants)) {
     plot <- plot +
@@ -96,7 +96,7 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
     return("")
   }
 
-  stats <- graphr::stats_count_uni(champ_x) %>%
+  stats <- stats_count_uni(champ_x) %>%
     dplyr::group_by(champ_quali) %>%
     dplyr::mutate(pos = n) %>%
     dplyr::ungroup() %>%
@@ -121,7 +121,7 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
   echelle_y <- dplyr::group_by(stats, champ_x) %>%
     dplyr::summarise(n = sum(n)) %>%
     dplyr::pull(n) %>%
-    graphr::echelle_integer()
+    echelle_integer()
 
   plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_x, y = n, fill = "")) +
     ggplot2::geom_area(show.legend = FALSE) +
@@ -140,7 +140,7 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
     plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = format(n, big.mark = " "), y = pos), size = 3)
   }
 
-  texte_repondants <- graphr::pct_repondants(identifiant %>% unique() %>% length(), n_graph)
+  texte_repondants <- pct_repondants(identifiant %>% unique() %>% length(), n_graph)
 
   if (!is.null(texte_repondants)) {
     plot <- plot +
@@ -170,7 +170,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
     return("")
   }
 
-  stats <- graphr::stats_count_uni(champ_quali, max_modalites = max_modalites, pct_arrondi = pct_arrondi)
+  stats <- stats_count_uni(champ_quali, max_modalites = max_modalites, pct_arrondi = pct_arrondi)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
@@ -222,7 +222,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
     plot <- plot + ggplot2::labs(x = NULL, y = NULL)
   }
 
-  texte_repondants <- graphr::pct_repondants(sum(stats$n), length(champ_quali))
+  texte_repondants <- pct_repondants(sum(stats$n), length(champ_quali))
 
   if (!is.null(texte_repondants)) {
     plot <- plot +
@@ -254,7 +254,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
     return("")
   }
 
-  stats <- graphr::stats_count_bi(champ_quali, champ_x, identifiant, complet = TRUE)
+  stats <- stats_count_bi(champ_quali, champ_x, identifiant, complet = TRUE)
 
   if (position_legende == "droite") {
     stats <- dplyr::mutate(stats, pos = length(unique(identifiant)) - pos)
@@ -280,7 +280,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
   echelle_y <- dplyr::group_by(stats, champ_x) %>%
     dplyr::summarise(n = sum(n)) %>%
     dplyr::pull(n) %>%
-    graphr::echelle_integer()
+    echelle_integer()
 
   plot <- plot +
     ggplot2::geom_area() +
@@ -313,7 +313,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
     }
   }
 
-  texte_repondants <- graphr::pct_repondants(sum(stats$n), length(champ_quali))
+  texte_repondants <- pct_repondants(sum(stats$n), length(champ_quali))
 
   if (!is.null(texte_repondants)) {
     plot <- plot +
@@ -343,7 +343,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     return("")
   }
 
-  stats <- graphr::stats_count_bi(champ_quali, champ_valeur) %>%
+  stats <- stats_count_bi(champ_quali, champ_valeur) %>%
     dplyr::rename(champ_valeur = champ_x) %>%
     dplyr::arrange(champ_quali, champ_valeur) %>%
     tidyr::drop_na(champ_valeur) %>%
@@ -406,7 +406,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     dplyr::ungroup() %>%
     tidyr::drop_na(champ_valeur) %>%
     nrow() %>%
-    graphr::pct_repondants(max(stats$total), .)
+    pct_repondants(max(stats$total), .)
 
   if (!is.null(texte_repondants)) {
     plot <- plot +
@@ -441,7 +441,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
     return("")
   }
 
-  stats <- graphr::stats_count_bi(champ_valeur, champ_quali, identifiant)
+  stats <- stats_count_bi(champ_valeur, champ_quali, identifiant)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_x)) {
@@ -457,7 +457,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
   echelle_y <- dplyr::group_by(stats, champ_x) %>%
     dplyr::summarise(n = sum(n)) %>%
     dplyr::pull(n) %>%
-    graphr::echelle_integer()
+    echelle_integer()
 
   plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_x, y = n, fill = factor(champ_quali, levels = rev(levels(champ_quali))))) +
     ggplot2::geom_col(width = 0.5) +
