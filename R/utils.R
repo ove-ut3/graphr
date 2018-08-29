@@ -1,4 +1,3 @@
-#' @keywords internal
 stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, pct_arrondi = 1) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
@@ -38,7 +37,6 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
   return(stats)
 }
 
-#' @keywords internal
 stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = FALSE) {
 
   stats <- dplyr::tibble(champ_x = champ_x, champ_quali = champ_quali) %>%
@@ -65,7 +63,6 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
 
 }
 
-#' @keywords internal
 pct_repondants <- function(repondants, total) {
 
   if (repondants != total) {
@@ -78,7 +75,6 @@ pct_repondants <- function(repondants, total) {
 
 }
 
-#' @keywords internal
 echelle_integer <- function(champ, n = 5) {
 
   if (length(champ) == 0) return(champ)
