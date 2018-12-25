@@ -6,7 +6,8 @@
 \usage{
 quali_uni(champ_quali, lib_pct = TRUE, max_modalites = NULL,
   lib_modalite_autre = NULL, choix_multiple = FALSE,
-  marge_gauche = FALSE, taille_texte = 3.5)
+  marge_gauche = FALSE, taille_texte = 3.5,
+  pct_suffix = "<U+202F>\%")
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -22,6 +23,8 @@ quali_uni(champ_quali, lib_pct = TRUE, max_modalites = NULL,
 \item{marge_gauche}{\dots}
 
 \item{taille_texte}{\dots}
+
+\item{pct_suffix}{\dots}
 }
 \description{
 quali_uni

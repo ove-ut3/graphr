@@ -6,7 +6,7 @@
 \usage{
 quali_bi(champ_quali, champ_valeur, identifiant, taille_texte = 3,
   taille_texte_legende = 1, orientation = "horizontal",
-  label_pourcentage = FALSE)
+  label_pourcentage = FALSE, pct_suffix = "<U+202F>\%")
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -22,6 +22,8 @@ quali_bi(champ_quali, champ_valeur, identifiant, taille_texte = 3,
 \item{orientation}{\dots}
 
 \item{label_pourcentage}{\dots}
+
+\item{pct_suffix}{\dots}
 }
 \description{
 quali_bi
