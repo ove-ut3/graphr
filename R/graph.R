@@ -203,7 +203,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
       ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = paste0(champ_quali, "\n", caractr::str_pretty_num(n), " (", pct, ")")))
   } else {
     plot <- plot +
-      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = paste0(champ_quali, "\n", pct)))
+      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = glue::glue("{champ_quali}\n{pct}")))
   }
 
   plot <- plot +
@@ -572,7 +572,7 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
   }
 
   if (label_effectif == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = paste0(lib_pct, "\n(", n,")"), y = pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = glue::glue("{lib_pct}\n({n})"), y = pos), size = 3)
   } else {
     plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = lib_pct, y = pos), size = 3)
   }
