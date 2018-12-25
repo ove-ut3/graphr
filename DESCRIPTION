@@ -14,4 +14,4 @@ Imports:
   ggplot2,
   scales,
   tidyr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
