@@ -8,10 +8,10 @@ Description: Functions to build graphs using ggplot2.
 License: Etalab
 Encoding: UTF-8
 LazyData: true
-Imports:
-  caractr,
-  dplyr,
-  ggplot2,
-  scales,
-  tidyr
 RoxygenNote: 6.1.1
+Imports:
+    dplyr,
+    ggplot2,
+    tidyr
+Remotes:
+    stephLH/caractr
