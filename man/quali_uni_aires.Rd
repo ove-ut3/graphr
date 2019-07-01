@@ -5,8 +5,7 @@
 \title{quali_uni_aires}
 \usage{
 quali_uni_aires(champ_x, identifiant, n_graph, n_population,
-  label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE,
-  pct_suffix = "<U+202F>\%")
+  label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE, ...)
 }
 \arguments{
 \item{identifiant}{\dots}
@@ -19,7 +18,7 @@ quali_uni_aires(champ_x, identifiant, n_graph, n_population,
 
 \item{label_pourcentage_saut_ligne}{\dots}
 
-\item{pct_suffix}{\dots}
+\item{\dots}{\code{caractr::str_percent} additional arguments}
 
 \item{table}{\dots}
 }

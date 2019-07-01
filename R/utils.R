@@ -1,4 +1,4 @@
-stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, pct_arrondi = 1, pct_suffix = "\U202F%") {
+stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, ...) {
 
   stats <- dplyr::tibble(champ_quali = champ_quali) %>%
     tidyr::drop_na(champ_quali) %>%
@@ -24,7 +24,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
     }
   }
 
-  stats <- dplyr::mutate(stats, pct = caractr::str_percent(n / sum(stats$n), suffix = pct_suffix, digits = pct_arrondi))
+  stats <- dplyr::mutate(stats, pct = caractr::str_percent(n / sum(stats$n), ...))
 
   if (choix_multiple == TRUE) {
 
@@ -37,14 +37,14 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
   return(stats)
 }
 
-stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = FALSE, pct_suffix = "\U202F%") {
+stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = FALSE, ...) {
 
   stats <- dplyr::tibble(champ_x = champ_x, champ_quali = champ_quali) %>%
     tidyr::drop_na(champ_quali) %>%
     dplyr::count(champ_quali, champ_x) %>%
     dplyr::group_by(champ_x) %>%
     dplyr::mutate(pos = cumsum(n) - 0.5 * n,
-                  pct = caractr::str_percent(n / sum(n, na.rm = TRUE), suffix = pct_suffix)) %>%
+                  pct = caractr::str_percent(n / sum(n, na.rm = TRUE), ...)) %>%
     dplyr::ungroup()
 
   if (complet == TRUE) {
@@ -90,7 +90,7 @@ echelle_integer <- function(champ, n = 5) {
   return(echelle)
 }
 
-stats_count_histo <- function(data, var, pct_suffix = "\U202F%") {
+stats_count_histo <- function(data, var, ...) {
 
   stats <- data %>%
     dplyr::count(!!dplyr::enquo(var)) %>%
@@ -98,7 +98,7 @@ stats_count_histo <- function(data, var, pct_suffix = "\U202F%") {
     dplyr::mutate(evol = ifelse(dplyr::row_number() == 1,
                                 NA_real_,
                                 (n - dplyr::lag(n)) / dplyr::lag(n)) %>%
-                    caractr::str_percent(suffix = pct_suffix, sign = TRUE),
+                    caractr::str_percent(..., sign = TRUE),
                   base_100 = 100 + (100 * (n - dplyr::first(n)) / dplyr::first(n)))
 
   return(stats)

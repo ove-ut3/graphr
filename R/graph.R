@@ -7,17 +7,17 @@
 #' @param choix_multiple \dots
 #' @param marge_gauche \dots
 #' @param taille_texte \dots
-#' @param pct_suffix \dots
+#' @param \dots \code{caractr::str_percent} additional arguments
 #'
 #' @export
-quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5, pct_suffix = "\U202F%") {
+quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5, ...) {
 
   if (length(champ_quali) == 0) {
     cat("Effectif nul")
     return(invisible(NULL))
   }
 
-  stats <- stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple, pct_suffix = pct_suffix)
+  stats <- stats_count_uni(champ_quali, max_modalites, lib_modalite_autre, choix_multiple, ...)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
@@ -88,21 +88,21 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
 #' @param n_population \dots
 #' @param label_pourcentage \dots
 #' @param label_pourcentage_saut_ligne \dots
-#' @param pct_suffix \dots
+#' @param \dots \code{caractr::str_percent} additional arguments
 #'
 #' @export
-quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE, pct_suffix = "\U202F%") {
+quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE, ...) {
 
   if (length(champ_x) == 0) {
     cat("effectif nul")
     return("")
   }
 
-  stats <- stats_count_uni(champ_x, pct_suffix = pct_suffix) %>%
+  stats <- stats_count_uni(champ_x, ...) %>%
     dplyr::group_by(champ_quali) %>%
     dplyr::mutate(pos = n) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(pct = caractr::str_percent(n / n_population, suffix = pct_suffix)) %>%
+    dplyr::mutate(pct = caractr::str_percent(n / n_population, ...)) %>%
     dplyr::full_join(dplyr::tibble(champ_quali = factor(levels(champ_x)),
                                    champ_x = 1:length(levels(champ_x))),
                      by = "champ_quali") %>%
@@ -162,18 +162,17 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 #' @param effectif \dots
 #' @param taille_texte \dots
 #' @param marges \dots
-#' @param pct_suffix \dots
-#' @param pct_arrondi \dots
+#' @param \dots \code{caractr::str_percent} additional arguments
 #'
 #' @export
-quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, effectif = TRUE, taille_texte = 3.5, marges = TRUE, pct_suffix = "\U202F%", pct_arrondi = 1) {
+quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, effectif = TRUE, taille_texte = 3.5, marges = TRUE, ...) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
     return("")
   }
 
-  stats <- stats_count_uni(champ_quali, max_modalites = max_modalites, pct_suffix = pct_suffix, pct_arrondi = pct_arrondi)
+  stats <- stats_count_uni(champ_quali, max_modalites = max_modalites, ...)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
@@ -248,17 +247,17 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
 #' @param taille_texte_legende \dots
 #' @param nombre_lignes_legende \dots
 #' @param palette_ordinal \dots
-#' @param pct_suffix \dots
+#' @param \dots \code{caractr::str_percent} additional arguments
 #'
 #' @export
-quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE, pct_suffix = "\U202F%") {
+quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE, ...) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
     return("")
   }
 
-  stats <- stats_count_bi(champ_quali, champ_x, identifiant, complet = TRUE, pct_suffix = pct_suffix)
+  stats <- stats_count_bi(champ_quali, champ_x, identifiant, complet = TRUE, ...)
 
   if (position_legende == "droite") {
     stats <- dplyr::mutate(stats, pos = length(unique(identifiant)) - pos)
@@ -338,17 +337,17 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
 #' @param taille_texte_legende \dots
 #' @param orientation \dots
 #' @param label_pourcentage \dots
-#' @param pct_suffix \dots
+#' @param \dots \code{caractr::str_percent} additional arguments
 #'
 #' @export
-quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE, pct_suffix = "\U202F%") {
+quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE, ...) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
     return("")
   }
 
-  stats <- stats_count_bi(champ_quali, champ_valeur, pct_suffix = pct_suffix) %>%
+  stats <- stats_count_bi(champ_quali, champ_valeur, ...) %>%
     dplyr::rename(champ_valeur = champ_x) %>%
     dplyr::arrange(champ_quali, champ_valeur) %>%
     tidyr::drop_na(champ_valeur) %>%
@@ -381,7 +380,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(caractr::str_pretty_num(n), " (", caractr::str_percent(pct, suffix = pct_suffix),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(caractr::str_pretty_num(n), " (", caractr::str_percent(pct, ...),")")))
   } else {
     plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = pos, label = caractr::str_pretty_num(n)))
   }
@@ -432,10 +431,10 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
 #' @param taille_texte_legende \dots
 #' @param orientation \dots
 #' @param label_pourcentage \dots
-#' @param pct_suffix \dots
+#' @param \dots \code{caractr::str_percent} additional arguments
 #'
 #' @export
-quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE, pct_suffix = "\U202F%") {
+quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE, ...) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
@@ -447,7 +446,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
     return("")
   }
 
-  stats <- stats_count_bi(champ_valeur, champ_quali, identifiant, pct_suffix = pct_suffix)
+  stats <- stats_count_bi(champ_valeur, champ_quali, identifiant, ...)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_x)) {
@@ -471,7 +470,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
     ggplot2::scale_y_continuous(breaks = echelle_y)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "identity", size = 3, ggplot2::aes(y = pos, label = paste0(caractr::str_pretty_num(n), " (", caractr::str_percent(pct, suffix = pct_suffix),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "identity", size = 3, ggplot2::aes(y = pos, label = paste0(caractr::str_pretty_num(n), " (", caractr::str_percent(pct, ...),")")))
   } else {
     plot <- plot + ggplot2::geom_text(position = "identity", size = 3, ggplot2::aes(y = pos, label = caractr::str_pretty_num(n)))
   }
@@ -508,10 +507,10 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
 #' @param taille_texte_axe_x \dots
 #' @param nombre_lignes_legende \dots
 #' @param palette_ordinal \dots
-#' @param pct_suffix \dots
+#' @param \dots \code{caractr::str_percent} additional arguments
 #'
 #' @export
-quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, position_legende = "bas", taille_texte_legende = 1, taille_texte_axe_x = 9, nombre_lignes_legende = NULL, palette_ordinal = FALSE, pct_suffix = "\U202F%") {
+quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, position_legende = "bas", taille_texte_legende = 1, taille_texte_axe_x = 9, nombre_lignes_legende = NULL, palette_ordinal = FALSE, ...) {
 
   if (length(champ_quali) == 0) {
     cat("effectif nul")
@@ -526,7 +525,7 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
                        dplyr::rename(n_total = n),
                      by = "champ_x") %>%
     dplyr::mutate(pct = n / n_total,
-                  lib_pct = caractr::str_percent(pct, suffix = pct_suffix)) %>%
+                  lib_pct = caractr::str_percent(pct, ...)) %>%
     dplyr::group_by(champ_x) %>%
     dplyr::mutate(pos = cumsum(pct) - 0.5 * pct) %>%
     dplyr::ungroup()
@@ -555,7 +554,7 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
   plot <- plot +
     ggplot2::geom_area() +
     ggplot2::scale_x_continuous(breaks = stats$champ_x %>% as.numeric %>% unique, labels = levels(champ_x)) +
-    ggplot2::scale_y_continuous(breaks = seq(0, 1, by = 0.2), labels = seq(0, 1, by = 0.2) %>% caractr::str_percent(suffix = pct_suffix)) +
+    ggplot2::scale_y_continuous(breaks = seq(0, 1, by = 0.2), labels = seq(0, 1, by = 0.2) %>% caractr::str_percent(...)) +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.title = ggplot2::element_blank(),

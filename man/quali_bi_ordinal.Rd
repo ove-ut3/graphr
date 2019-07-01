@@ -6,8 +6,7 @@
 \usage{
 quali_bi_ordinal(champ_quali, champ_valeur, identifiant,
   taille_texte = 3, taille_texte_legende = 1,
-  orientation = "horizontal", label_pourcentage = FALSE,
-  pct_suffix = "<U+202F>\%")
+  orientation = "horizontal", label_pourcentage = FALSE, ...)
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -24,7 +23,7 @@ quali_bi_ordinal(champ_quali, champ_valeur, identifiant,
 
 \item{label_pourcentage}{\dots}
 
-\item{pct_suffix}{\dots}
+\item{\dots}{\code{caractr::str_percent} additional arguments}
 }
 \description{
 quali_bi_ordinal

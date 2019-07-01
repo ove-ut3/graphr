@@ -7,7 +7,7 @@
 quali_bi_aires2(champ_quali, champ_x, label_effectif = FALSE,
   position_legende = "bas", taille_texte_legende = 1,
   taille_texte_axe_x = 9, nombre_lignes_legende = NULL,
-  palette_ordinal = FALSE, pct_suffix = "<U+202F>\%")
+  palette_ordinal = FALSE, ...)
 }
 \arguments{
 \item{champ_quali}{\dots}
@@ -26,7 +26,7 @@ quali_bi_aires2(champ_quali, champ_x, label_effectif = FALSE,
 
 \item{palette_ordinal}{\dots}
 
-\item{pct_suffix}{\dots}
+\item{\dots}{\code{caractr::str_percent} additional arguments}
 }
 \description{
 quali_bi_aires2
