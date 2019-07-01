@@ -12,7 +12,7 @@
 #' @export
 quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_modalite_autre = NULL, choix_multiple = FALSE, marge_gauche = FALSE, taille_texte = 3.5, ...) {
 
-  if (length(champ_quali) == 0) {
+  if (length(na.omit(champ_quali)) == 0) {
     cat("Effectif nul")
     return(invisible(NULL))
   }
@@ -93,7 +93,7 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
 #' @export
 quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE, ...) {
 
-  if (length(champ_x) == 0) {
+  if (length(na.omit(champ_x)) == 0) {
     cat("effectif nul")
     return("")
   }
@@ -167,7 +167,7 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 #' @export
 quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche = FALSE, effectif = TRUE, taille_texte = 3.5, marges = TRUE, ...) {
 
-  if (length(champ_quali) == 0) {
+  if (length(na.omit(champ_quali)) == 0) {
     cat("effectif nul")
     return("")
   }
@@ -252,7 +252,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
 #' @export
 quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage = FALSE, position_legende = "bas", taille_texte_legende = 1, nombre_lignes_legende = NULL, palette_ordinal = FALSE, ...) {
 
-  if (length(champ_quali) == 0) {
+  if (length(na.omit(champ_quali)) == 0) {
     cat("effectif nul")
     return("")
   }
@@ -342,7 +342,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
 #' @export
 quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE, ...) {
 
-  if (length(champ_quali) == 0) {
+  if (length(na.omit(champ_quali)) == 0) {
     cat("effectif nul")
     return("")
   }
@@ -436,7 +436,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
 #' @export
 quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, taille_texte_legende = 1, orientation = "horizontal", label_pourcentage = FALSE, ...) {
 
-  if (length(champ_quali) == 0) {
+  if (length(na.omit(champ_quali)) == 0) {
     cat("effectif nul")
     return("")
   }
@@ -512,7 +512,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
 #' @export
 quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, position_legende = "bas", taille_texte_legende = 1, taille_texte_axe_x = 9, nombre_lignes_legende = NULL, palette_ordinal = FALSE, ...) {
 
-  if (length(champ_quali) == 0) {
+  if (length(na.omit(champ_quali)) == 0) {
     cat("effectif nul")
     return("")
   }
