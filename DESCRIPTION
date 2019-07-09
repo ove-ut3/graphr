@@ -13,6 +13,8 @@ Imports:
     caractr,
     dplyr,
     ggplot2,
+    glue,
+    scales,
     tidyr
 Remotes:
     stephLH/caractr
