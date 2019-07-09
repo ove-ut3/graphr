@@ -34,9 +34,9 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
     if (is.null(stats[["ordre"]])) {
       stats <- dplyr::mutate(stats, ordre = -dplyr::row_number())
     }
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = stats::reorder(champ_quali, ordre), y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = stats::reorder(champ_quali, .data$ordre), y = .data$n, fill = champ_quali))
   } else {
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = factor(champ_quali, levels = rev(levels(champ_quali))), y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = factor(champ_quali, levels = rev(levels(champ_quali))), y = .data$n, fill = champ_quali))
   }
 
   plot <- plot +
@@ -47,10 +47,10 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
     ggplot2::theme_bw()
 
   if (lib_pct == FALSE | choix_multiple == TRUE) {
-    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = ifelse(n >= 1, caractr::str_number_fr(n), "")))
+    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = ifelse(.data$n >= 1, caractr::str_number_fr(.data$n), "")))
 
   } else {
-    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = paste0(caractr::str_number_fr(n), " (", pct, ")")))
+    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = paste0(caractr::str_number_fr(.data$n), " (", .data$pct, ")")))
 
   }
 
@@ -99,15 +99,15 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
   }
 
   stats <- stats_count_uni(champ_x, ...) %>%
-    dplyr::group_by(champ_quali) %>%
-    dplyr::mutate(pos = n) %>%
+    dplyr::group_by(.data$champ_quali) %>%
+    dplyr::mutate(pos = .data$n) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(pct = caractr::str_percent_fr(n / n_population, ...)) %>%
+    dplyr::mutate(pct = caractr::str_percent_fr(.data$n / n_population, ...)) %>%
     dplyr::full_join(dplyr::tibble(champ_quali = factor(levels(champ_x)),
                                    champ_x = 1:length(levels(champ_x))),
                      by = "champ_quali") %>%
     dplyr::arrange(champ_x) %>%
-    dplyr::mutate(n = ifelse(is.na(n), 0, n))
+    dplyr::mutate(n = ifelse(is.na(.data$n), 0, .data$n))
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_x)) {
@@ -121,11 +121,11 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
   }
 
   echelle_y <- dplyr::group_by(stats, champ_x) %>%
-    dplyr::summarise(n = sum(n)) %>%
-    dplyr::pull(n) %>%
+    dplyr::summarise(n = sum(.data$n)) %>%
+    dplyr::pull(.data$n) %>%
     echelle_integer()
 
-  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_x, y = n, fill = "")) +
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_x, y = .data$n, fill = "")) +
     ggplot2::geom_area(show.legend = FALSE) +
     ggplot2::scale_x_continuous(breaks = 1:length(levels(champ_x)), labels = levels(champ_x)) +
     ggplot2::scale_y_continuous(breaks = echelle_y) +
@@ -134,12 +134,10 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 
   if (label_pourcentage == TRUE) {
     if (label_pourcentage_saut_ligne == TRUE) {
-      plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = paste0(caractr::str_number_fr(n), "\n(", pct,")"), y = pos), size = 3)
+      plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(caractr::str_number_fr(.data$n), "\n(", .data$pct,")"), y = .data$pos), size = 3)
     } else {
-      plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = paste0(caractr::str_number_fr(n), " (", pct,")"), y = pos), size = 3)
+      plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(caractr::str_number_fr(.data$n), " (", .data$pct,")"), y = .data$pos), size = 3)
     }
-  } else {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = caractr::str_number_fr(n), y = pos), size = 3)
   }
 
   texte_repondants <- pct_repondants(identifiant %>% unique() %>% length(), n_graph)
@@ -189,20 +187,20 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
     if (is.null(stats[["ordre"]])) {
       stats <- dplyr::mutate(stats, ordre = -dplyr::row_number())
     }
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = stats::reorder(champ_quali, ordre), y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = stats::reorder(.data$champ_quali, .data$ordre), y = .data$n, fill = .data$champ_quali))
   } else {
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = factor(champ_quali, levels = rev(levels(champ_quali))), y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = factor(champ_quali, levels = rev(levels(champ_quali))), y = .data$n, fill = champ_quali))
   }
 
-  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = "", y = rev(n), fill = champ_quali)) +
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = "", y = rev(.data$n), fill = champ_quali)) +
     ggplot2::geom_bar(show.legend = FALSE, width = 1, stat = "identity")
 
   if (effectif == TRUE) {
     plot <- plot +
-      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = paste0(champ_quali, "\n", caractr::str_number_fr(n), " (", pct, ")")))
+      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = .data$n/2 + c(0, cumsum(.data$n)[-length(.data$n)]), label = paste0(champ_quali, "\n", caractr::str_number_fr(.data$n), " (", .data$pct, ")")))
   } else {
     plot <- plot +
-      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = n/2 + c(0, cumsum(n)[-length(n)]), label = glue::glue("{champ_quali}\n{pct}")))
+      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = .data$n/2 + c(0, cumsum(.data$n)[-length(.data$n)]), label = glue::glue("{champ_quali}\n{pct}")))
   }
 
   plot <- plot +
@@ -260,7 +258,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
   stats <- stats_count_bi(champ_quali, champ_x, identifiant, complet = TRUE, ...)
 
   if (position_legende == "droite") {
-    stats <- dplyr::mutate(stats, pos = length(unique(identifiant)) - pos)
+    stats <- dplyr::mutate(stats, pos = length(unique(identifiant)) - .data$pos)
   }
 
   if (nrow(stats) == 0) {
@@ -275,14 +273,15 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
   }
 
   if (position_legende == "bas") {
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = n, fill = factor(champ_quali, levels = rev(levels(champ_quali))), order = rev(champ_quali)))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = .data$n, fill = factor(champ_quali, levels = rev(levels(champ_quali))), order = rev(champ_quali)))
   } else if (position_legende == "droite") {
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = n, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = .data$n, fill = champ_quali))
   }
 
-  echelle_y <- dplyr::group_by(stats, champ_x) %>%
-    dplyr::summarise(n = sum(n)) %>%
-    dplyr::pull(n) %>%
+  echelle_y <- stats %>%
+    dplyr::group_by(champ_x) %>%
+    dplyr::summarise(n = sum(.data$n)) %>%
+    dplyr::pull(.data$n) %>%
     echelle_integer()
 
   plot <- plot +
@@ -304,9 +303,9 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
   }
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = paste0(caractr::str_number_fr(n), " (", pct,")"), y = pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(caractr::str_number_fr(.data$n), " (", .data$pct,")"), y = .data$pos), size = 3)
   } else {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = caractr::str_number_fr(n), y = pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = caractr::str_number_fr(.data$n), y = .data$pos), size = 3)
   }
 
   if (position_legende == "bas") {
@@ -348,19 +347,19 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
   }
 
   stats <- stats_count_bi(champ_quali, champ_valeur, ...) %>%
-    dplyr::rename(champ_valeur = champ_x) %>%
+    dplyr::rename(champ_valeur = .data$champ_x) %>%
     dplyr::arrange(champ_quali, champ_valeur) %>%
     tidyr::drop_na(champ_valeur) %>%
     dplyr::left_join(dplyr::group_by(., champ_quali) %>%
-                       dplyr::summarise(total = sum(n)),
+                       dplyr::summarise(total = sum(.data$n)),
                      by = "champ_quali") %>%
     dplyr::group_by(champ_quali) %>%
-    dplyr::mutate(pct = n / total,
-                  pos1 = cumsum(n),
-                  pos2 = c(0, utils::head(pos1, -1)),
-                  pos3 = pos2 + n / 2,
-                  pos4 = c(utils::head(pos3, 1), diff(pos3)),
-                  pos = pos4 / total)
+    dplyr::mutate(pct = .data$n / .data$total,
+                  pos1 = cumsum(.data$n),
+                  pos2 = c(0, utils::head(.data$pos1, -1)),
+                  pos3 = .data$pos2 + .data$n / 2,
+                  pos4 = c(utils::head(.data$pos3, 1), diff(.data$pos3)),
+                  pos = .data$pos4 / .data$total)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
@@ -374,15 +373,15 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     }
   }
 
-  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_quali, y = pct, fill = factor(champ_valeur, levels = rev(levels(champ_valeur))))) +
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_quali, y = .data$pct, fill = factor(champ_valeur, levels = rev(levels(champ_valeur))))) +
     ggplot2::geom_col(width = 0.5) +
     ggplot2::scale_fill_brewer() +
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(caractr::str_number_fr(n), " (", caractr::str_percent_fr(pct, ...),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), position = "stack", size = 3, ggplot2::aes(y = .data$pos, label = paste0(caractr::str_number_fr(.data$n), " (", caractr::str_percent_fr(.data$pct, ...),")")))
   } else {
-    plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = pos, label = caractr::str_number_fr(n)))
+    plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = .data$pos, label = caractr::str_number_fr(.data$n)))
   }
 
   if (orientation == "horizontal") {
@@ -459,25 +458,25 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
     }
   }
 
-  echelle_y <- dplyr::group_by(stats, champ_x) %>%
-    dplyr::summarise(n = sum(n)) %>%
-    dplyr::pull(n) %>%
+  echelle_y <- dplyr::group_by(stats, .data$champ_x) %>%
+    dplyr::summarise(n = sum(.data$n)) %>%
+    dplyr::pull(.data$n) %>%
     echelle_integer()
 
-  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = champ_x, y = n, fill = factor(champ_quali, levels = rev(levels(champ_quali))))) +
+  plot <- ggplot2::ggplot(stats, ggplot2::aes(x = .data$champ_x, y = .data$n, fill = factor(champ_quali, levels = rev(levels(champ_quali))))) +
     ggplot2::geom_col(width = 0.5) +
     ggplot2::scale_fill_discrete(direction = -1) +
     ggplot2::scale_y_continuous(breaks = echelle_y)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "identity", size = 3, ggplot2::aes(y = pos, label = paste0(caractr::str_number_fr(n), " (", caractr::str_percent_fr(pct, ...),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), position = "identity", size = 3, ggplot2::aes(y = .data$pos, label = paste0(caractr::str_number_fr(.data$n), " (", caractr::str_percent_fr(.data$pct, ...),")")))
   } else {
-    plot <- plot + ggplot2::geom_text(position = "identity", size = 3, ggplot2::aes(y = pos, label = caractr::str_number_fr(n)))
+    plot <- plot + ggplot2::geom_text(position = "identity", size = 3, ggplot2::aes(y = .data$pos, label = caractr::str_number_fr(.data$n)))
   }
 
   if (orientation == "horizontal") {
     plot <- plot +
-      ggplot2::scale_x_discrete(drop = FALSE, limits = rev(levels(champ_x))) +
+      ggplot2::scale_x_discrete(drop = FALSE, limits = rev(levels(.data$champ_x))) +
       ggplot2::coord_flip()
 
   } else if (orientation == "vertical") {
@@ -522,16 +521,16 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
   stats <- stats %>%
     dplyr::count(champ_x, champ_quali) %>%
     dplyr::left_join(dplyr::count(stats, champ_x) %>%
-                       dplyr::rename(n_total = n),
+                       dplyr::rename(n_total = .data$n),
                      by = "champ_x") %>%
-    dplyr::mutate(pct = n / n_total,
-                  lib_pct = caractr::str_percent_fr(pct, ...)) %>%
+    dplyr::mutate(pct = .data$n / .data$n_total,
+                  lib_pct = caractr::str_percent_fr(.data$pct, ...)) %>%
     dplyr::group_by(champ_x) %>%
-    dplyr::mutate(pos = cumsum(pct) - 0.5 * pct) %>%
+    dplyr::mutate(pos = cumsum(.data$pct) - 0.5 * .data$pct) %>%
     dplyr::ungroup()
 
   if (position_legende == "droite") {
-    stats <- dplyr::mutate(stats, pos = 1 - pos)
+    stats <- dplyr::mutate(stats, pos = 1 - .data$pos)
   }
 
   if (nrow(stats) == 0) {
@@ -546,9 +545,9 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
   }
 
   if (position_legende == "bas") {
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = pct, fill = factor(champ_quali, levels = rev(levels(champ_quali))), order = rev(champ_quali)))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = .data$pct, fill = factor(champ_quali, levels = rev(levels(champ_quali))), order = rev(champ_quali)))
   } else if (position_legende == "droite") {
-    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = pct, fill = champ_quali))
+    plot <- ggplot2::ggplot(stats, ggplot2::aes(x = as.numeric(champ_x), y = .data$pct, fill = champ_quali))
   }
 
   plot <- plot +
@@ -571,9 +570,9 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
   }
 
   if (label_effectif == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = glue::glue("{lib_pct}\n({n})"), y = pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = glue::glue("{lib_pct}\n({n})"), y = .data$pos), size = 3)
   } else {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = lib_pct, y = pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = .data$lib_pct, y = .data$pos), size = 3)
   }
 
   if (position_legende == "bas") {
