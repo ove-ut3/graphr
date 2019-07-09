@@ -82,7 +82,7 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
 
 #' quali_uni_aires
 #'
-#' @param table \dots
+#' @param champ_x \dots
 #' @param identifiant \dots
 #' @param n_graph \dots
 #' @param n_population \dots

@@ -8,6 +8,8 @@ quali_uni_aires(champ_x, identifiant, n_graph, n_population,
   label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE, ...)
 }
 \arguments{
+\item{champ_x}{\dots}
+
 \item{identifiant}{\dots}
 
 \item{n_graph}{\dots}
@@ -19,8 +21,6 @@ quali_uni_aires(champ_x, identifiant, n_graph, n_population,
 \item{label_pourcentage_saut_ligne}{\dots}
 
 \item{\dots}{\code{caractr::str_percent_fr} additional arguments}
-
-\item{table}{\dots}
 }
 \description{
 quali_uni_aires
