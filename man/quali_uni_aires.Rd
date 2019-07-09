@@ -18,7 +18,7 @@ quali_uni_aires(champ_x, identifiant, n_graph, n_population,
 
 \item{label_pourcentage_saut_ligne}{\dots}
 
-\item{\dots}{\code{caractr::str_percent} additional arguments}
+\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
 
 \item{table}{\dots}
 }

@@ -23,7 +23,7 @@ quali_uni(champ_quali, lib_pct = TRUE, max_modalites = NULL,
 
 \item{taille_texte}{\dots}
 
-\item{\dots}{\code{caractr::str_percent} additional arguments}
+\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
 }
 \description{
 quali_uni

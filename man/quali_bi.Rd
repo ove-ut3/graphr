@@ -23,7 +23,7 @@ quali_bi(champ_quali, champ_valeur, identifiant, taille_texte = 3,
 
 \item{label_pourcentage}{\dots}
 
-\item{\dots}{\code{caractr::str_percent} additional arguments}
+\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
 }
 \description{
 quali_bi

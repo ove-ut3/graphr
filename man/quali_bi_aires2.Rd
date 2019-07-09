@@ -26,7 +26,7 @@ quali_bi_aires2(champ_quali, champ_x, label_effectif = FALSE,
 
 \item{palette_ordinal}{\dots}
 
-\item{\dots}{\code{caractr::str_percent} additional arguments}
+\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
 }
 \description{
 quali_bi_aires2

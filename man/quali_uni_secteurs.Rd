@@ -21,7 +21,7 @@ quali_uni_secteurs(champ_quali, max_modalites = NULL,
 
 \item{marges}{\dots}
 
-\item{\dots}{\code{caractr::str_percent} additional arguments}
+\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
 }
 \description{
 quali_uni_secteurs
