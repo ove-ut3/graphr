@@ -22,7 +22,7 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
       stats <- stats %>%
-        dplyr::add_row(champ_quali = tail(levels(stats$champ_quali), 1),
+        dplyr::add_row(champ_quali = utils::tail(levels(stats$champ_quali), 1),
                        n = 0)
     } else {
       cat("Effectif nul")
@@ -112,7 +112,7 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_x)) {
       stats <- stats %>%
-        dplyr::add_row(champ_x = tail(levels(stats$champ_x), 1),
+        dplyr::add_row(champ_x = utils::tail(levels(stats$champ_x), 1),
                        n = 0)
     } else {
       cat("effectif nul")
@@ -177,7 +177,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
       stats <- stats %>%
-        dplyr::add_row(champ_quali = tail(levels(stats$champ_quali), 1),
+        dplyr::add_row(champ_quali = utils::tail(levels(stats$champ_quali), 1),
                        n = 0)
     } else {
       cat("effectif nul")
@@ -266,7 +266,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_x)) {
       stats <- stats %>%
-        dplyr::add_row(champ_x = tail(levels(stats$champ_x), 1),
+        dplyr::add_row(champ_x = utils::tail(levels(stats$champ_x), 1),
                        n = 0)
     } else {
       cat("effectif nul")
@@ -357,16 +357,16 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     dplyr::group_by(champ_quali) %>%
     dplyr::mutate(pct = n / total,
                   pos1 = cumsum(n),
-                  pos2 = c(0, head(pos1, -1)),
+                  pos2 = c(0, utils::head(pos1, -1)),
                   pos3 = pos2 + n / 2,
-                  pos4 = c(head(pos3, 1), diff(pos3)),
+                  pos4 = c(utils::head(pos3, 1), diff(pos3)),
                   pos = pos4 / total)
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
       stats <- stats %>%
         dplyr::ungroup() %>%
-        dplyr::add_row(champ_quali = tail(levels(stats$champ_quali), 1),
+        dplyr::add_row(champ_quali = utils::tail(levels(stats$champ_quali), 1),
                        n = 0, total = 0, pct = 0)
     } else {
       cat("effectif nul")
@@ -451,7 +451,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_x)) {
       stats <- stats %>%
-        dplyr::add_row(champ_x = tail(levels(stats$champ_x), 1),
+        dplyr::add_row(champ_x = utils::tail(levels(stats$champ_x), 1),
                        n = 0)
     } else {
       cat("effectif nul")
@@ -537,7 +537,7 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_x)) {
       stats <- stats %>%
-        dplyr::add_row(champ_x = tail(levels(stats$champ_x), 1),
+        dplyr::add_row(champ_x = utils::tail(levels(stats$champ_x), 1),
                        n = 0)
     } else {
       cat("effectif nul")
