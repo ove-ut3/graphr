@@ -442,7 +442,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
   }
 
   if (length(na.omit(champ_valeur)) == 0) {
-    cat("Aucune donnée non-nulle")
+    cat("Aucune donn\u00E9e non-nulle")
     return("")
   }
 

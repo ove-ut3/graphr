@@ -17,7 +17,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
 
     if (nrow(stats) > max_modalites) {
       stats <- dplyr::filter(stats, dplyr::row_number() <= max_modalites - 1) %>%
-        dplyr::bind_rows(dplyr::tibble(champ_quali = ifelse(!is.null(lib_modalite_autre), lib_modalite_autre, "Autres modalités"),
+        dplyr::bind_rows(dplyr::tibble(champ_quali = ifelse(!is.null(lib_modalite_autre), lib_modalite_autre, "Autres modalit\u00E9s"),
                                 n = dplyr::filter(stats, dplyr::row_number() >= max_modalites) %>%
                                   dplyr::pull(n) %>%
                                   sum()))
@@ -66,7 +66,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
 pct_repondants <- function(repondants, total) {
 
   if (repondants != total) {
-    n_repondants <- paste0("Répondants : ", repondants, " (", caractr::str_percent_fr(repondants / total), ")")
+    n_repondants <- paste0("R\u00E9pondants : ", repondants, " (", caractr::str_percent_fr(repondants / total), ")")
   } else {
     n_repondants <- NULL
   }
