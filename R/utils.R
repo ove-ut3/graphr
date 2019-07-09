@@ -24,7 +24,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
     }
   }
 
-  stats <- dplyr::mutate(stats, pct = caractr::str_percent(n / sum(stats$n), ...))
+  stats <- dplyr::mutate(stats, pct = caractr::str_percent_fr(n / sum(stats$n), ...))
 
   if (choix_multiple == TRUE) {
 
@@ -44,7 +44,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
     dplyr::count(champ_quali, champ_x) %>%
     dplyr::group_by(champ_x) %>%
     dplyr::mutate(pos = cumsum(n) - 0.5 * n,
-                  pct = caractr::str_percent(n / sum(n, na.rm = TRUE), ...)) %>%
+                  pct = caractr::str_percent_fr(n / sum(n, na.rm = TRUE), ...)) %>%
     dplyr::ungroup()
 
   if (complet == TRUE) {
@@ -52,7 +52,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
     complet <- expand.grid(factor(levels(champ_x), levels(champ_x)), factor(levels(champ_quali), levels(champ_quali)))
     names(complet) <- c("champ_x", "champ_quali")
 
-    stats <- dplyr::mutate(stats, pct = caractr::str_percent(n / length(unique(identifiant)))) %>%
+    stats <- dplyr::mutate(stats, pct = caractr::str_percent_fr(n / length(unique(identifiant)))) %>%
       dplyr::full_join(complet, by = c("champ_x", "champ_quali")) %>%
       dplyr::arrange(champ_x, champ_quali) %>%
       dplyr::mutate(n = ifelse(is.na(n), 0, n))
@@ -66,7 +66,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
 pct_repondants <- function(repondants, total) {
 
   if (repondants != total) {
-    n_repondants <- paste0("Répondants : ", repondants, " (", caractr::str_percent(repondants / total), ")")
+    n_repondants <- paste0("Répondants : ", repondants, " (", caractr::str_percent_fr(repondants / total), ")")
   } else {
     n_repondants <- NULL
   }
@@ -98,7 +98,7 @@ stats_count_histo <- function(data, var, ...) {
     dplyr::mutate(evol = ifelse(dplyr::row_number() == 1,
                                 NA_real_,
                                 (n - dplyr::lag(n)) / dplyr::lag(n)) %>%
-                    caractr::str_percent(..., sign = TRUE),
+                    caractr::str_percent_fr(..., sign = TRUE),
                   base_100 = 100 + (100 * (n - dplyr::first(n)) / dplyr::first(n)))
 
   return(stats)
