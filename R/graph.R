@@ -359,7 +359,8 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
                   pos2 = c(0, utils::head(.data$pos1, -1)),
                   pos3 = .data$pos2 + .data$n / 2,
                   pos4 = c(utils::head(.data$pos3, 1), diff(.data$pos3)),
-                  pos = .data$pos4 / .data$total)
+                  pos = .data$pos4 / .data$total) %>%
+    dplyr::ungroup()
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
