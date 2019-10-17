@@ -1,0 +1,337 @@
+#' shiny_donut
+#'
+#' @param var \dots
+#' @param title \dots
+#' @param colors \dots
+#' @param alpha \dots
+#'
+#' @export
+shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
+
+  if (is.null(colors)) {
+    colors <- shiny_colors(length(unique(var)))
+  }
+
+  data <- dplyr::tibble(var) %>%
+    dplyr::count(var)
+
+  if (class(var) != "factor") {
+    data <- dplyr::arrange(data, dplyr::desc(n))
+  }
+
+  data %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(text = n / sum(n)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(text = dplyr::if_else(text < 0.005, round(text, digits = 3), round(text, 2))) %>%
+    dplyr::mutate_at("text", caractr::str_percent_fr, digits = NULL) %>%
+    plotly::plot_ly(
+      labels = ~var, values = ~n,
+      sort = FALSE,
+      direction = "clockwise",
+      textinfo = "text",
+      text = ~text,
+      hoverinfo = "text",
+      hovertext = ~glue::glue("Effectif: {n}"),
+      marker = list(colors = colors),
+      opacity = alpha
+    ) %>%
+    plotly::add_pie(hole = 0.6) %>%
+    plotly::layout(
+      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      annotations = list(text = glue::glue("<b>{title}</b>"), font = list(size = 15), showarrow = FALSE),
+      legend = list(y = 0.5)
+    )
+
+}
+
+#' shiny_line_base100
+#'
+#' @param var_year \dots
+#' @param var_value \dots
+#' @param title_x \dots
+#' @param title_y \dots
+#' @param note_base100 \dots
+#'
+#' @export
+shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", note_base100 = "") {
+
+  data <- dplyr::tibble(var_year, var_value) %>%
+    dplyr::mutate(base_100 = divr::base_100(var_value))
+
+  data %>%
+    plotly::plot_ly(
+      x = ~var_year,
+      hoverinfo = "text",
+      hovertext = ~paste0("Valeur: ", var_value,
+                          "<br>Base 100: ", round(base_100, digits = 1))
+    ) %>%
+    plotly::add_lines(y = ~base_100, name = "linear", line = list(shape = "linear")) %>%
+    plotly::layout(
+      xaxis = list(title = title_x),
+      yaxis = list(title = title_y),
+      margin = list(r = 50, b = 50),
+      annotations = list(text = note_base100, xref = 'paper', yref = 'paper',
+                         x = 1.08, y = -0.16, xanchor = 'right', yanchor = 'auto',
+                         showarrow = FALSE)
+    )
+
+}
+
+#' shiny_line_percent
+#'
+#' @param var_year \dots
+#' @param var_percent \dots
+#' @param title_x \dots
+#' @param title_y \dots
+#' @param hovertext \dots
+#'
+#' @export
+shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = "", hovertext = NULL) {
+
+  dplyr::tibble(
+    var_year,
+    var_percent
+  ) %>%
+    plotly::plot_ly(
+      x = ~var_year,
+      hoverinfo = "text",
+      hovertext = hovertext
+    ) %>%
+    plotly::add_lines(y = ~var_percent, name = "linear", line = list(shape = "linear")) %>%
+    plotly::layout(
+      xaxis = list(title = title_x),
+      yaxis = list(title = title_y, ticksuffix = "%", rangemode = "tozero"),
+      margin = list(r = 50)
+    )
+
+}
+
+#' shiny_line_percent
+#'
+#' @param var_year \dots
+#' @param var_percent \dots
+#' @param title_x \dots
+#' @param title_y \dots
+#'
+#' @export
+shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = "", title_y = "") {
+
+  data <- dplyr::tibble(
+    var_year,
+    var_line,
+    var_percent
+  ) %>%
+    dplyr::mutate_at("var_percent", divr::round_100) %>%
+    tidyr::nest_legacy(-var_line)
+
+  plot <- data %>%
+    plotly::plot_ly(
+      x = ~var_year
+    )
+
+  for (num_line in 1:nrow(data)) {
+    plot <- plot %>%
+      plotly::add_lines(y = ~var_percent, data = data$data[[num_line]], name = data$var_line[num_line], line = list(shape = "linear"))
+  }
+
+  plot <- plot %>%
+    plotly::layout(
+      hovermode = 'x',
+      xaxis = list(title = title_x),
+      yaxis = list(title = title_y, ticksuffix = "%", rangemode = "tozero"),
+      legend = list(y = 0.5)
+    )
+
+  plot
+
+}
+
+#' shiny_areas_evolution
+#'
+#' @param var_x \dots
+#' @param var_y \dots
+#' @param colors \dots
+#' @param title_x \dots
+#' @param title_y \dots
+#'
+#' @export
+shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", title_y = "") {
+
+  if (is.null(colors)) {
+    colors <- shiny_colors(length(unique(var_y)))
+  }
+
+  data <- dplyr::tibble(
+    var_x,
+    var_y,
+  ) %>%
+    dplyr::count(var_x, var_y) %>%
+    tidyr::spread(var_y, n, fill = 0) %>%
+    tidyr::gather("var_y", "n", -var_x)
+
+  if (class(var_y) == "factor") {
+
+    levels <- levels(var_y)
+
+  } else {
+
+    levels <- data %>%
+      dplyr::group_by(var_y) %>%
+      dplyr::summarise(n_total = sum(n)) %>%
+      dplyr::ungroup() %>%
+      dplyr::arrange(dplyr::desc(n_total)) %>%
+      dplyr::pull(var_y)
+
+  }
+
+  data %>%
+    dplyr::mutate_at("var_y", factor, levels) %>%
+    dplyr::arrange(var_x, var_y) %>%
+    dplyr::group_by(var_x) %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::mutate(cumsum = cumsum(pct)) %>%
+    dplyr::ungroup() %>%
+    plotly::plot_ly(type = 'scatter', x = ~var_x, y = ~cumsum, color = ~var_y, colors = colors,
+                    mode = 'none', fill = 'tonexty',
+                    hoverinfo = "text",
+                    hovertext = ~caractr::str_paste(
+                      stringr::str_c(dplyr::na_if(title_x, ""), ": ", var_x),
+                      paste("Effectif: ", n),
+                      paste("Pourcentage: ", caractr::str_percent_fr(pct / 100)),
+                      sep = "<br>")
+                    ) %>%
+    plotly::layout(
+      xaxis = list(title = title_x, showgrid = FALSE),
+      yaxis = list(title = title_y, showgrid = FALSE, ticksuffix = "%"),
+      legend = list(y = 0.5)
+    )
+
+}
+
+#' shiny_barplot_vertical_multi
+#'
+#' @param var_x \dots
+#' @param var_y \dots
+#' @param colors \dots
+#' @param alpha \dots
+#' @param title_x \dots
+#' @param title_y \dots
+#'
+#' @export
+shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1, title_x = "", title_y = "") {
+
+  if (is.null(colors)) {
+    colors <- shiny_colors(length(unique(var_y)))
+  }
+
+  dplyr::tibble(
+    var_x,
+    var_y,
+  ) %>%
+    dplyr::count(var_x, var_y) %>%
+    dplyr::group_by(var_x) %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::ungroup() %>%
+    plotly::plot_ly(type = 'bar', x = ~var_x, y = ~pct, color = ~var_y,
+                    colors = colors,
+                    opacity = alpha,
+                    hoverinfo = "text",
+                    hovertext = ~paste0("Effectif: ", n,
+                                        "<br>Pourcentage: ", caractr::str_percent_fr(pct / 100))
+                    ) %>%
+    plotly::layout(
+      barmode = 'stack',
+      xaxis = list(title = title_x, showgrid = FALSE),
+      yaxis = list(title = title_y, showgrid = FALSE, ticksuffix = "%"),
+      legend = list(y = 0.5)
+    )
+
+}
+
+#' shiny_barplot_horizontal_multi
+#'
+#' @param var_x \dots
+#' @param var_y \dots
+#' @param colors \dots
+#' @param alpha \dots
+#' @param title_x \dots
+#' @param title_y \dots
+#'
+#' @export
+shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 1, title_x = "", title_y = "") {
+
+  if (is.null(colors)) {
+    colors <- shiny_colors(length(unique(var_y)))
+  }
+
+  dplyr::tibble(
+    var_x,
+    var_y,
+  ) %>%
+    dplyr::count(var_x, var_y) %>%
+    dplyr::group_by(var_x) %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate_at("var_x", factor, levels = rev(levels(.$var_x))) %>%
+    plotly::plot_ly(type = 'bar', x = ~pct, y = ~var_x, color = ~var_y,
+                    colors = colors,
+                    opacity = alpha,
+                    hoverinfo = "text",
+                    hovertext = ~paste0("Effectif: ", n,
+                                        "<br>Pourcentage: ", caractr::str_percent_fr(pct / 100))
+    ) %>%
+    plotly::layout(
+      barmode = 'stack',
+      xaxis = list(title = title_x, showgrid = FALSE, ticksuffix = "%"),
+      yaxis = list(title = title_y, showgrid = FALSE),
+      legend = list(
+        orientation = "h",
+        xanchor = "center",
+        x = 0.5,
+        traceorder = "normal"
+      )
+    )
+
+}
+
+#' shiny_treemap
+#'
+#' @param var_x \dots
+#' @param colors \dots
+#' @param alpha \dots
+#'
+#' @export
+shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
+
+  data <- dplyr::tibble(var_x) %>%
+    dplyr::count(var_x) %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate_at("pct", divr::round_100) %>%
+    dplyr::mutate_at("pct", ~ . / 100) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", caractr::str_percent_fr(.))) %>%
+    dplyr::mutate(var_x = glue::glue("{var_x} ({pct})")) %>%
+    dplyr::mutate(parent = as.character(var_x))
+
+  if (is.null(colors)) {
+    data$color <- shiny_colors(nrow(data))
+    data$colorAlpha <- alpha
+    data <- data %>%
+      tidyr::nest_legacy(color, colorAlpha, .key = "style") %>%
+      dplyr::arrange(dplyr::desc(dplyr::row_number()))
+  } else {
+    data$style <- NA_character_
+  }
+
+  data %>%
+    echarts4r::e_charts() %>%
+    echarts4r::e_treemap(
+      parent = parent, child = var_x, value = n, style,
+      roam = FALSE, nodeClick = FALSE, zoomToNodeRatio = FALSE, breadcrumb = list("show" = FALSE)
+    ) %>%
+    echarts4r::e_tooltip()
+
+}
