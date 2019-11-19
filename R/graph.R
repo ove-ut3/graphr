@@ -380,7 +380,7 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), position = "stack", size = 3, ggplot2::aes(y = .data$pos, label = paste0(caractr::str_number_fr(.data$n), " (", caractr::str_percent_fr(.data$pct, ...),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(caractr::str_number_fr(n), " (", caractr::str_percent_fr(pct, ...),")")))
   } else {
     plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = .data$pos, label = caractr::str_number_fr(.data$n)))
   }

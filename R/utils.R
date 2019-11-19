@@ -87,17 +87,3 @@ echelle_integer <- function(champ, n = 5) {
 
   return(echelle)
 }
-
-stats_count_histo <- function(data, var, ...) {
-
-  stats <- data %>%
-    dplyr::count(!!dplyr::enquo(var)) %>%
-    dplyr::group_by() %>%
-    dplyr::mutate(evol = ifelse(dplyr::row_number() == 1,
-                                NA_real_,
-                                (.data$n - dplyr::lag(.data$n)) / dplyr::lag(.data$n)) %>%
-                    caractr::str_percent_fr(..., sign = TRUE),
-                  base_100 = 100 + (100 * (.data$n - dplyr::first(.data$n)) / dplyr::first(.data$n)))
-
-  return(stats)
-}
