@@ -4,9 +4,16 @@
 \alias{quali_bi_ordinal}
 \title{quali_bi_ordinal}
 \usage{
-quali_bi_ordinal(champ_quali, champ_valeur, identifiant,
-  taille_texte = 3, taille_texte_legende = 1,
-  orientation = "horizontal", label_pourcentage = FALSE, ...)
+quali_bi_ordinal(
+  champ_quali,
+  champ_valeur,
+  identifiant,
+  taille_texte = 3,
+  taille_texte_legende = 1,
+  orientation = "horizontal",
+  label_pourcentage = FALSE,
+  ...
+)
 }
 \arguments{
 \item{champ_quali}{\dots}

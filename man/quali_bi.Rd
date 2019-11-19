@@ -4,9 +4,16 @@
 \alias{quali_bi}
 \title{quali_bi}
 \usage{
-quali_bi(champ_quali, champ_valeur, identifiant, taille_texte = 3,
-  taille_texte_legende = 1, orientation = "horizontal",
-  label_pourcentage = FALSE, ...)
+quali_bi(
+  champ_quali,
+  champ_valeur,
+  identifiant,
+  taille_texte = 3,
+  taille_texte_legende = 1,
+  orientation = "horizontal",
+  label_pourcentage = FALSE,
+  ...
+)
 }
 \arguments{
 \item{champ_quali}{\dots}

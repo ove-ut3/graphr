@@ -4,8 +4,15 @@
 \alias{quali_uni_aires}
 \title{quali_uni_aires}
 \usage{
-quali_uni_aires(champ_x, identifiant, n_graph, n_population,
-  label_pourcentage = FALSE, label_pourcentage_saut_ligne = TRUE, ...)
+quali_uni_aires(
+  champ_x,
+  identifiant,
+  n_graph,
+  n_population,
+  label_pourcentage = FALSE,
+  label_pourcentage_saut_ligne = TRUE,
+  ...
+)
 }
 \arguments{
 \item{champ_x}{\dots}

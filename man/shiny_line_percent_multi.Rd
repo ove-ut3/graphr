@@ -4,8 +4,13 @@
 \alias{shiny_line_percent_multi}
 \title{shiny_line_percent}
 \usage{
-shiny_line_percent_multi(var_year, var_line, var_percent, title_x = "",
-  title_y = "")
+shiny_line_percent_multi(
+  var_year,
+  var_line,
+  var_percent,
+  title_x = "",
+  title_y = ""
+)
 }
 \arguments{
 \item{var_year}{\dots}

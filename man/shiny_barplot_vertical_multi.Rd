@@ -4,8 +4,14 @@
 \alias{shiny_barplot_vertical_multi}
 \title{shiny_barplot_vertical_multi}
 \usage{
-shiny_barplot_vertical_multi(var_x, var_y, colors = NULL, alpha = 1,
-  title_x = "", title_y = "")
+shiny_barplot_vertical_multi(
+  var_x,
+  var_y,
+  colors = NULL,
+  alpha = 1,
+  title_x = "",
+  title_y = ""
+)
 }
 \arguments{
 \item{var_x}{\dots}

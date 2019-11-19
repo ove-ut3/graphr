@@ -4,10 +4,17 @@
 \alias{quali_bi_aires}
 \title{quali_bi_aires}
 \usage{
-quali_bi_aires(champ_quali, champ_x, identifiant,
-  label_pourcentage = FALSE, position_legende = "bas",
-  taille_texte_legende = 1, nombre_lignes_legende = NULL,
-  palette_ordinal = FALSE, ...)
+quali_bi_aires(
+  champ_quali,
+  champ_x,
+  identifiant,
+  label_pourcentage = FALSE,
+  position_legende = "bas",
+  taille_texte_legende = 1,
+  nombre_lignes_legende = NULL,
+  palette_ordinal = FALSE,
+  ...
+)
 }
 \arguments{
 \item{champ_quali}{\dots}

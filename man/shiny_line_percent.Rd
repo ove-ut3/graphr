@@ -4,8 +4,13 @@
 \alias{shiny_line_percent}
 \title{shiny_line_percent}
 \usage{
-shiny_line_percent(var_year, var_percent, title_x = "", title_y = "",
-  hovertext = NULL)
+shiny_line_percent(
+  var_year,
+  var_percent,
+  title_x = "",
+  title_y = "",
+  hovertext = NULL
+)
 }
 \arguments{
 \item{var_year}{\dots}

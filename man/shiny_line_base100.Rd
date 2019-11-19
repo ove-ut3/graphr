@@ -4,8 +4,13 @@
 \alias{shiny_line_base100}
 \title{shiny_line_base100}
 \usage{
-shiny_line_base100(var_year, var_value, title_x = "", title_y = "",
-  note_base100 = "")
+shiny_line_base100(
+  var_year,
+  var_value,
+  title_x = "",
+  title_y = "",
+  note_base100 = ""
+)
 }
 \arguments{
 \item{var_year}{\dots}
