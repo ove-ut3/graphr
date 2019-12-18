@@ -11,12 +11,17 @@ LazyData: true
 RoxygenNote: 7.0.2
 Imports:
     caractr,
+    divr,
     dplyr,
+    echarts4r,
     ggplot2,
     glue,
-    rlang,
+    plotly,
     scales,
     stats,
-    tidyr
+    stringr,
+    tidyr,
+    utils
 Remotes:
-    stephLH/caractr
+    stephLH/caractr,
+    stephLH/divr
