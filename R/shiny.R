@@ -58,7 +58,7 @@ shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
 shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", note_base100 = "") {
 
   data <- dplyr::tibble(var_year, var_value) %>%
-    dplyr::mutate(base_100 = divr::base_100(var_value))
+    dplyr::mutate(base_100 = graphr::base_100(var_value))
 
   data %>%
     plotly::plot_ly(
@@ -123,7 +123,7 @@ shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = 
     var_line,
     var_percent
   ) %>%
-    dplyr::mutate_at("var_percent", divr::round_100) %>%
+    dplyr::mutate_at("var_percent", graphr::round_100) %>%
     tidyr::nest_legacy(-var_line)
 
   plot <- data %>%
@@ -313,7 +313,7 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
     dplyr::group_by() %>%
     dplyr::mutate(pct = n / sum(n) * 100) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate_at("pct", divr::round_100) %>%
+    dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
     dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., suffix = "\u202F%"))) %>%
     dplyr::mutate(labels = glue::glue("{labels} ({pct})")) %>%
@@ -363,7 +363,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
     dplyr::group_by(labels) %>%
     dplyr::mutate(pct = n / sum(data$n) * 100) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate_at("pct", divr::round_100) %>%
+    dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
     dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., suffix = "\u202F%"))) %>%
     plotly::plot_ly() %>%

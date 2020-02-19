@@ -23,3 +23,58 @@ shiny_colors <- function(n) {
   return(shiny_colors)
 
 }
+
+#' Round with a sum 100 (avoid round errors)
+#'
+#' @param x A numeric vector
+#'
+#' @return A round numeric vector
+#'
+#' @examples
+#' x <- c(81.808219, 6.575342, 11.616438)
+#'
+#' sum(x)
+#' sum(round(x))
+#'
+#' graphr::round_100(x)
+#' sum(graphr::round_100(x))
+#'
+#' @export
+round_100 <- function(x) {
+
+  if (sum(round(x)) == 100) {
+    return(round(x))
+  }
+
+  diff <- abs(x - round(x))
+  position_max <- which(diff == max(diff))
+
+  round_100 <- round(x)
+
+  if (sum(round(x)) == 99) {
+    round_100[position_max] <- round_100[position_max] + 1
+  } else if (sum(round(x)) == 101) {
+    round_100[position_max] <- round_100[position_max] - 1
+  }
+
+  return(round_100)
+}
+
+#' Return a base 100 serie
+#'
+#' @param x A numeric vector
+#'
+#' @return A base 100 vector
+#'
+#' @examples
+#' x <- c(5096, 5077, 5278, 5352, 5437, 5387)
+#'
+#' graphr::base_100(x)
+#'
+#' @export
+base_100 <- function(x) {
+
+  base_100 <- 100 + ((x - x[1]) / x[1] * 100)
+
+  return(base_100)
+}
