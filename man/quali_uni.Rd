@@ -30,7 +30,7 @@ quali_uni(
 
 \item{taille_texte}{\dots}
 
-\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
+\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_uni

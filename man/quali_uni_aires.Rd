@@ -27,7 +27,7 @@ quali_uni_aires(
 
 \item{label_pourcentage_saut_ligne}{\dots}
 
-\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
+\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_uni_aires

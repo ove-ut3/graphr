@@ -30,7 +30,7 @@ quali_bi_ordinal(
 
 \item{label_pourcentage}{\dots}
 
-\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
+\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_bi_ordinal

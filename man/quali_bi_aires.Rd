@@ -33,7 +33,7 @@ quali_bi_aires(
 
 \item{palette_ordinal}{\dots}
 
-\item{\dots}{\code{caractr::str_percent_fr} additional arguments}
+\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_bi_aires
