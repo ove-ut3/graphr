@@ -24,7 +24,7 @@ shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
     dplyr::mutate(text = n / sum(n)) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(text = dplyr::if_else(text < 0.005, round(text, digits = 3), round(text, 2))) %>%
-    dplyr::mutate_at("text", caractr::str_percent_fr, digits = NULL) %>%
+    dplyr::mutate_at("text", scales::percent, suffix = "\u202F%", digits = NULL) %>%
     plotly::plot_ly(
       labels = ~var, values = ~n,
       sort = FALSE,
@@ -196,10 +196,10 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
     plotly::plot_ly(type = 'scatter', x = ~var_x, y = ~cumsum, color = ~var_y, colors = colors,
                     mode = 'none', fill = 'tonexty',
                     hoverinfo = "text",
-                    hovertext = ~caractr::str_paste(
+                    hovertext = ~ paste(
                       stringr::str_c(dplyr::na_if(title_x, ""), ": ", var_x),
                       paste("Effectif: ", n),
-                      paste("Pourcentage: ", caractr::str_percent_fr(pct / 100)),
+                      paste("Pourcentage: ", scales::percent(pct / 100, suffix = "\u202F%")),
                       sep = "<br>")
                     ) %>%
     plotly::layout(
@@ -239,7 +239,7 @@ shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1,
                     opacity = alpha,
                     hoverinfo = "text",
                     hovertext = ~paste0("Effectif: ", n,
-                                        "<br>Pourcentage: ", caractr::str_percent_fr(pct / 100))
+                                        "<br>Pourcentage: ", scales::percent(pct / 100, suffix = "\u202F%"))
                     ) %>%
     plotly::layout(
       barmode = 'stack',
@@ -280,7 +280,7 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
                     opacity = alpha,
                     hoverinfo = "text",
                     hovertext = ~paste0("Effectif: ", n,
-                                        "<br>Pourcentage: ", caractr::str_percent_fr(pct / 100))
+                                        "<br>Pourcentage: ", scales::percent(pct / 100, suffix = "\u202F%"))
     ) %>%
     plotly::layout(
       barmode = 'stack',
@@ -315,7 +315,7 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
     dplyr::ungroup() %>%
     dplyr::mutate_at("pct", divr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
-    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", caractr::str_percent_fr(.))) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., suffix = "\u202F%"))) %>%
     dplyr::mutate(labels = glue::glue("{labels} ({pct})")) %>%
     plotly::plot_ly() %>%
     plotly::add_trace(
@@ -365,7 +365,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
     dplyr::ungroup() %>%
     dplyr::mutate_at("pct", divr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
-    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", caractr::str_percent_fr(.))) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., suffix = "\u202F%"))) %>%
     plotly::plot_ly() %>%
     plotly::add_trace(
       type = "treemap",

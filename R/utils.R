@@ -24,7 +24,7 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
     }
   }
 
-  stats <- dplyr::mutate(stats, pct = caractr::str_percent_fr(.data$n / sum(stats$n), ...))
+  stats <- dplyr::mutate(stats, pct = scales::percent(.data$n / sum(stats$n), suffix = "\u202F%", ...))
 
   if (choix_multiple == TRUE) {
 
@@ -44,7 +44,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
     dplyr::count(champ_quali, champ_x) %>%
     dplyr::group_by(champ_x) %>%
     dplyr::mutate(pos = cumsum(.data$n) - 0.5 * .data$n,
-                  pct = caractr::str_percent_fr(.data$n / sum(.data$n, na.rm = TRUE), ...)) %>%
+                  pct = scales::percent(.data$n / sum(.data$n, na.rm = TRUE), suffix = "\u202F%", ...)) %>%
     dplyr::ungroup()
 
   if (complet == TRUE) {
@@ -52,7 +52,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
     complet <- expand.grid(factor(levels(champ_x), levels(champ_x)), factor(levels(champ_quali), levels(champ_quali)))
     names(complet) <- c("champ_x", "champ_quali")
 
-    stats <- dplyr::mutate(stats, pct = caractr::str_percent_fr(.data$n / length(unique(identifiant)))) %>%
+    stats <- dplyr::mutate(stats, pct = scales::percent(.data$n / length(unique(identifiant)), suffix = "\u202F%")) %>%
       dplyr::full_join(complet, by = c("champ_x", "champ_quali")) %>%
       dplyr::arrange(champ_x, champ_quali) %>%
       dplyr::mutate(n = ifelse(is.na(.data$n), 0, .data$n))
@@ -66,7 +66,7 @@ stats_count_bi <- function(champ_quali, champ_x, identifiant = NULL, complet = F
 pct_repondants <- function(repondants, total) {
 
   if (repondants != total) {
-    n_repondants <- paste0("R\u00E9pondants : ", repondants, " (", caractr::str_percent_fr(repondants / total), ")")
+    n_repondants <- paste0("R\u00E9pondants : ", repondants, " (", scales::percent(repondants / total, suffix = "\u202F%"), ")")
   } else {
     n_repondants <- NULL
   }
