@@ -305,33 +305,78 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
 #' @export
 shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
 
-  data <- dplyr::tibble(var_x) %>%
-    dplyr::count(var_x) %>%
+  dplyr::tibble(
+    labels = var_x
+  ) %>%
+    dplyr::mutate(parents = character(nrow(.))) %>%
+    dplyr::count(labels, parents) %>%
     dplyr::group_by() %>%
     dplyr::mutate(pct = n / sum(n) * 100) %>%
     dplyr::ungroup() %>%
     dplyr::mutate_at("pct", divr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
     dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", caractr::str_percent_fr(.))) %>%
-    dplyr::mutate(var_x = glue::glue("{var_x} ({pct})")) %>%
-    dplyr::mutate(parent = as.character(var_x))
+    dplyr::mutate(labels = glue::glue("{labels} ({pct})")) %>%
+    plotly::plot_ly() %>%
+    plotly::add_trace(
+      type = "treemap",
+      labels = ~labels,
+      parents = ~parents,
+      values = ~n,
+      hoverinfo = "text",
+      hovertext = ~glue::glue("{labels}\nEffectif: {n}"),
+      marker = list(colors = graphr::shiny_colors(length(unique(var_x)))),
+      opacity = alpha
+    )
 
-  if (is.null(colors)) {
-    data$color <- shiny_colors(nrow(data))
-    data$colorAlpha <- alpha
-    data <- data %>%
-      tidyr::nest_legacy(color, colorAlpha, .key = "style") %>%
-      dplyr::arrange(dplyr::desc(dplyr::row_number()))
-  } else {
-    data$style <- NA_character_
-  }
+}
+
+#' shiny_treemap_bi
+#'
+#' @param parents \dots
+#' @param labels \dots
+#' @param colors \dots
+#' @param alpha \dots
+#'
+#' @export
+shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
+
+  data <- dplyr::tibble(
+    parents,
+    labels
+  ) %>%
+    dplyr::count(parents, labels) %>%
+    dplyr::mutate(parents = dplyr::if_else(parents == labels, "", parents))
 
   data %>%
-    echarts4r::e_charts() %>%
-    echarts4r::e_treemap(
-      parent = parent, child = var_x, value = n, style,
-      roam = FALSE, nodeClick = FALSE, zoomToNodeRatio = FALSE, breadcrumb = list("show" = FALSE)
+    dplyr::bind_rows(
+      data %>%
+        dplyr::filter(parents != "") %>%
+        dplyr::group_by(parents) %>%
+        dplyr::summarise_at("n", sum) %>%
+        dplyr::ungroup() %>%
+        dplyr::mutate(
+          labels = parents,
+          parents = ""
+        )
     ) %>%
-    echarts4r::e_tooltip()
+    dplyr::group_by(labels) %>%
+    dplyr::mutate(pct = n / sum(data$n) * 100) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate_at("pct", divr::round_100) %>%
+    dplyr::mutate_at("pct", ~ . / 100) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", caractr::str_percent_fr(.))) %>%
+    plotly::plot_ly() %>%
+    plotly::add_trace(
+      type = "treemap",
+      labels = ~labels,
+      parents = ~parents,
+      values = ~n,
+      branchvalues = "total",
+      hoverinfo = "text",
+      hovertext = ~glue::glue("{labels}\nEffectif: {n}\nPourcentage: {pct}"),
+      marker = list(colors = graphr::shiny_colors(length(unique(parents)))),
+      opacity = alpha
+    )
 
 }
