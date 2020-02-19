@@ -12,7 +12,6 @@ RoxygenNote: 7.0.2
 Imports:
     divr,
     dplyr,
-    echarts4r,
     ggplot2,
     glue,
     plotly,
