@@ -96,6 +96,7 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
     var_year,
     var_percent
   ) %>%
+    dplyr::mutate_at("var_percent", ~ . * 100) %>%
     plotly::plot_ly(
       x = ~var_year,
       hoverinfo = "text",
@@ -104,7 +105,7 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
     plotly::add_lines(y = ~var_percent, name = "linear", line = list(shape = "linear")) %>%
     plotly::layout(
       xaxis = list(title = title_x),
-      yaxis = list(title = title_y, ticksuffix = "%", rangemode = "tozero"),
+      yaxis = list(title = title_y, rangemode = "tozero", ticksuffix = "\u202F%"),
       margin = list(r = 50)
     ) %>%
     plotly::config(displayModeBar = FALSE)
