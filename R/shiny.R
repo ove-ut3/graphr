@@ -42,7 +42,8 @@ shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
       yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       annotations = list(text = glue::glue("<b>{title}</b>"), font = list(size = 15), showarrow = FALSE),
       legend = list(y = 0.5)
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
 
@@ -75,7 +76,8 @@ shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", 
       annotations = list(text = note_base100, xref = 'paper', yref = 'paper',
                          x = 1.08, y = -0.16, xanchor = 'right', yanchor = 'auto',
                          showarrow = FALSE)
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
 
@@ -104,7 +106,8 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
       xaxis = list(title = title_x),
       yaxis = list(title = title_y, ticksuffix = "%", rangemode = "tozero"),
       margin = list(r = 50)
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
 
@@ -142,7 +145,8 @@ shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = 
       xaxis = list(title = title_x),
       yaxis = list(title = title_y, ticksuffix = "%", rangemode = "tozero"),
       legend = list(y = 0.5)
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
   plot
 
@@ -206,7 +210,8 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
       xaxis = list(title = title_x, showgrid = FALSE),
       yaxis = list(title = title_y, showgrid = FALSE, ticksuffix = "%"),
       legend = list(y = 0.5)
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
 
@@ -246,7 +251,8 @@ shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1,
       xaxis = list(title = title_x, showgrid = FALSE),
       yaxis = list(title = title_y, showgrid = FALSE, ticksuffix = "%"),
       legend = list(y = 0.5)
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
 
@@ -292,7 +298,8 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
         x = 0.5,
         traceorder = "normal"
       )
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
 
@@ -327,7 +334,8 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
       hovertext = ~glue::glue("{labels}\nEffectif: {n}"),
       marker = list(colors = graphr::shiny_colors(length(unique(var_x)))),
       opacity = alpha
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
 
@@ -377,6 +385,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
       hovertext = ~glue::glue("{labels}\nEffectif: {n}\nPourcentage: {pct}"),
       marker = list(colors = graphr::shiny_colors(length(unique(parents)))),
       opacity = alpha
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
 }
