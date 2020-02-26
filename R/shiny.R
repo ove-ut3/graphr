@@ -23,8 +23,8 @@ shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
     dplyr::group_by() %>%
     dplyr::mutate(text = n / sum(n)) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(text = dplyr::if_else(text < 0.005, round(text, digits = 3), round(text, 2))) %>%
-    dplyr::mutate_at("text", scales::percent, suffix = "\u202F%", digits = NULL) %>%
+    dplyr::mutate_at("text", scales::percent, suffix = "\u202F%", accuracy = 1) %>%
+    dplyr::mutate_at("text", dplyr::recode, "0\u202F%" = "<\u202F1\u202F%") %>%
     plotly::plot_ly(
       labels = ~var, values = ~n,
       sort = FALSE,
