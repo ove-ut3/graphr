@@ -47,10 +47,10 @@ quali_uni <- function(champ_quali, lib_pct = TRUE, max_modalites = NULL, lib_mod
     ggplot2::theme_bw()
 
   if (lib_pct == FALSE | choix_multiple == TRUE) {
-    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = ifelse(.data$n >= 1, scales::number(.data$n, big.mark = "\u202F"), "")))
+    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = ifelse(.data$n >= 1, scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), "")))
 
   } else {
-    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = paste0(scales::number(.data$n, big.mark = "\u202F"), " (", .data$pct, ")")))
+    plot <- plot + ggplot2::geom_text(stat = "identity", size = taille_texte, ggplot2::aes(y = 0.2, hjust = 0, label = paste0(scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), " (", .data$pct, ")")))
 
   }
 
@@ -571,7 +571,7 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
   }
 
   if (label_effectif == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = glue::glue("{lib_pct}\n({n})"), y = .data$pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), stat = "identity", ggplot2::aes(label = glue::glue("{lib_pct}\n({n})"), y = pos), size = 3)
   } else {
     plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = .data$lib_pct, y = .data$pos), size = 3)
   }
