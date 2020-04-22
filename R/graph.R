@@ -350,24 +350,30 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     dplyr::rename(champ_valeur = .data$champ_x) %>%
     dplyr::arrange(champ_quali, champ_valeur) %>%
     tidyr::drop_na(champ_valeur) %>%
-    dplyr::left_join(dplyr::group_by(., champ_quali) %>%
-                       dplyr::summarise(total = sum(.data$n)),
-                     by = "champ_quali") %>%
+    dplyr::left_join(
+      dplyr::group_by(., champ_quali) %>%
+        dplyr::summarise(total = sum(.data$n)),
+      by = "champ_quali"
+    ) %>%
     dplyr::group_by(champ_quali) %>%
-    dplyr::mutate(pct = .data$n / .data$total,
-                  pos1 = cumsum(.data$n),
-                  pos2 = c(0, utils::head(.data$pos1, -1)),
-                  pos3 = .data$pos2 + .data$n / 2,
-                  pos4 = c(utils::head(.data$pos3, 1), diff(.data$pos3)),
-                  pos = .data$pos4 / .data$total) %>%
+    dplyr::mutate(
+      pct = .data$n / .data$total,
+      pos1 = cumsum(.data$n),
+      pos2 = c(0, utils::head(.data$pos1, -1)),
+      pos3 = .data$pos2 + .data$n / 2,
+      pos4 = c(utils::head(.data$pos3, 1), diff(.data$pos3)),
+      pos = .data$pos4 / .data$total
+    ) %>%
     dplyr::ungroup()
 
   if (nrow(stats) == 0) {
     if (is.factor(stats$champ_quali)) {
       stats <- stats %>%
         dplyr::ungroup() %>%
-        dplyr::add_row(champ_quali = utils::tail(levels(stats$champ_quali), 1),
-                       n = 0, total = 0, pct = 0)
+        dplyr::add_row(
+          champ_quali = utils::tail(levels(stats$champ_quali), 1),
+          n = 0, total = 0, pct = 0
+        )
     } else {
       cat("effectif nul")
       return("")

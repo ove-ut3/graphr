@@ -16,11 +16,16 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
   if (!is.null(max_modalites)) {
 
     if (nrow(stats) > max_modalites) {
-      stats <- dplyr::filter(stats, dplyr::row_number() <= max_modalites - 1) %>%
-        dplyr::bind_rows(dplyr::tibble(champ_quali = ifelse(!is.null(lib_modalite_autre), lib_modalite_autre, "Autres modalit\u00E9s"),
-                                n = dplyr::filter(stats, dplyr::row_number() >= max_modalites) %>%
-                                  dplyr::pull(.data$n) %>%
-                                  sum()))
+      stats <- stats %>%
+        dplyr::filter(dplyr::row_number() <= max_modalites - 1) %>%
+        dplyr::bind_rows(
+          dplyr::tibble(
+            champ_quali = ifelse(!is.null(lib_modalite_autre), lib_modalite_autre, "Autres modalit\u00E9s"),
+            n = dplyr::filter(stats, dplyr::row_number() >= max_modalites) %>%
+              dplyr::pull(.data$n) %>%
+              sum()
+          )
+        )
     }
   }
 
@@ -30,8 +35,10 @@ stats_count_uni <- function(champ_quali, max_modalites = NULL, lib_modalite_autr
 
     stats <- stats %>%
       dplyr::arrange(-.data$n) %>%
-      dplyr::mutate(n = ifelse(is.na(.data$n), 0, .data$n),
-                    ordre = -dplyr::row_number())
+      dplyr::mutate(
+        n = ifelse(is.na(.data$n), 0, .data$n),
+        ordre = -dplyr::row_number()
+      )
   }
 
   return(stats)
