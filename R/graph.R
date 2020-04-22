@@ -134,9 +134,9 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 
   if (label_pourcentage == TRUE) {
     if (label_pourcentage_saut_ligne == TRUE) {
-      plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(scales::number(.data$n, big.mark = "\u202F"), "\n(", .data$pct,")"), y = .data$pos), size = 3)
+      plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), "\n(", .data$pct,")"), y = .data$pos), size = 3)
     } else {
-      plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(scales::number(.data$n, big.mark = "\u202F"), " (", .data$pct,")"), y = .data$pos), size = 3)
+      plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), " (", .data$pct,")"), y = .data$pos), size = 3)
     }
   }
 
@@ -197,7 +197,7 @@ quali_uni_secteurs <- function(champ_quali, max_modalites = NULL, marge_gauche =
 
   if (effectif == TRUE) {
     plot <- plot +
-      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = .data$n/2 + c(0, cumsum(.data$n)[-length(.data$n)]), label = paste0(champ_quali, "\n", scales::number(.data$n, big.mark = "\u202F"), " (", .data$pct, ")")))
+      ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = .data$n/2 + c(0, cumsum(.data$n)[-length(.data$n)]), label = paste0(champ_quali, "\n", scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), " (", .data$pct, ")")))
   } else {
     plot <- plot +
       ggplot2::geom_text(size = taille_texte, ggplot2::aes(y = .data$n/2 + c(0, cumsum(.data$n)[-length(.data$n)]), label = glue::glue("{champ_quali}\n{pct}")))
@@ -303,9 +303,9 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
   }
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(scales::number(.data$n, big.mark = "\u202F"), " (", .data$pct,")"), y = .data$pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = paste0(scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), " (", .data$pct,")"), y = .data$pos), size = 3)
   } else {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = scales::number(.data$n, big.mark = "\u202F"), y = .data$pos), size = 3)
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), stat = "identity", ggplot2::aes(label = scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), y = .data$pos), size = 3)
   }
 
   if (position_legende == "bas") {
@@ -380,9 +380,9 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(scales::number(n, big.mark = "\u202F"), " (", scales::percent(pct, suffix = "\u202F%", ...),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, n != 0), position = "stack", size = 3, ggplot2::aes(y = pos, label = paste0(scales::number(n, accuracy = 1, big.mark = "\u202F"), " (", scales::percent(pct, suffix = "\u202F%", ...),")")))
   } else {
-    plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = .data$pos, label = scales::number(.data$n, big.mark = "\u202F")))
+    plot <- plot + ggplot2::geom_text(position = "stack", size = 3, ggplot2::aes(y = .data$pos, label = scales::number(.data$n, accuracy = 1, big.mark = "\u202F")))
   }
 
   if (orientation == "horizontal") {
@@ -470,9 +470,9 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
     ggplot2::scale_y_continuous(breaks = echelle_y)
 
   if (label_pourcentage == TRUE) {
-    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), position = "identity", size = 3, ggplot2::aes(y = .data$pos, label = paste0(scales::number(.data$n, big.mark = "\u202F"), " (", scales::percent(.data$pct, suffix = "\u202F%", ...),")")))
+    plot <- plot + ggplot2::geom_text(data = subset(stats, .data$n != 0), position = "identity", size = 3, ggplot2::aes(y = .data$pos, label = paste0(scales::number(.data$n, accuracy = 1, big.mark = "\u202F"), " (", scales::percent(.data$pct, suffix = "\u202F%", ...),")")))
   } else {
-    plot <- plot + ggplot2::geom_text(position = "identity", size = 3, ggplot2::aes(y = .data$pos, label = scales::number(.data$n, big.mark = "\u202F")))
+    plot <- plot + ggplot2::geom_text(position = "identity", size = 3, ggplot2::aes(y = .data$pos, label = scales::number(.data$n, accuracy = 1, big.mark = "\u202F")))
   }
 
   if (orientation == "horizontal") {
