@@ -375,6 +375,12 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
     dplyr::count(parents, labels) %>%
     dplyr::mutate(parents = dplyr::if_else(parents == labels, "", parents))
 
+  if (is.null(colors)) {
+    colors <- graphr::shiny_colors(length(unique(parents)))
+
+  }
+  colors <- c(rev(rep(colors, times = rev(table(data$parents)))), rev(colors))
+
   data %>%
     dplyr::bind_rows(
       data %>%
@@ -403,7 +409,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
       branchvalues = "total",
       hoverinfo = "text",
       hovertext = ~glue::glue("{labels}\nEffectif: {effectif}\nPourcentage: {pct}"),
-      marker = list(colors = graphr::shiny_colors(length(unique(parents)))),
+      marker = list(colors = colors),
       opacity = alpha
     ) %>%
     plotly::config(displayModeBar = FALSE)
