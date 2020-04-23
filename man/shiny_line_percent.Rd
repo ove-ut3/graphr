@@ -9,7 +9,8 @@ shiny_line_percent(
   var_percent,
   title_x = "",
   title_y = "",
-  hovertext = NULL
+  hovertext = NULL,
+  color = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ shiny_line_percent(
 \item{title_y}{\dots}
 
 \item{hovertext}{\dots}
+
+\item{color}{\dots}
 }
 \description{
 shiny_line_percent

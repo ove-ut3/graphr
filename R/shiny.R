@@ -62,7 +62,7 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
 #' @param note_base100 \dots
 #'
 #' @export
-shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", note_base100 = "") {
+shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", note_base100 = "", color = NULL) {
 
   data <- dplyr::tibble(var_year, var_value) %>%
     dplyr::mutate(base_100 = graphr::base_100(var_value))
@@ -74,14 +74,16 @@ shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", 
       hovertext = ~paste0("Valeur: ", var_value,
                           "<br>Base 100: ", round(base_100, digits = 1))
     ) %>%
-    plotly::add_lines(y = ~base_100, name = "linear", line = list(shape = "linear")) %>%
+    plotly::add_lines(y = ~base_100, name = "linear", line = list(shape = "linear", color = color)) %>%
     plotly::layout(
       xaxis = list(title = title_x),
       yaxis = list(title = title_y),
       margin = list(r = 50, b = 50),
-      annotations = list(text = note_base100, xref = 'paper', yref = 'paper',
-                         x = 1.08, y = -0.16, xanchor = 'right', yanchor = 'auto',
-                         showarrow = FALSE)
+      annotations = list(
+        text = note_base100, xref = 'paper', yref = 'paper',
+        x = 1.08, y = -0.16, xanchor = 'right', yanchor = 'auto',
+        showarrow = FALSE
+      )
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -94,9 +96,10 @@ shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", 
 #' @param title_x \dots
 #' @param title_y \dots
 #' @param hovertext \dots
+#' @param color \dots
 #'
 #' @export
-shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = "", hovertext = NULL) {
+shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = "", hovertext = NULL, color = NULL) {
 
   dplyr::tibble(
     var_year,
@@ -108,7 +111,7 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
       hoverinfo = "text",
       hovertext = hovertext
     ) %>%
-    plotly::add_lines(y = ~var_percent, name = "linear", line = list(shape = "linear")) %>%
+    plotly::add_lines(y = ~var_percent, name = "linear", line = list(shape = "linear", color = color)) %>%
     plotly::layout(
       xaxis = list(title = title_x),
       yaxis = list(title = title_y, rangemode = "tozero", ticksuffix = "\u202F%"),
