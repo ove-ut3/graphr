@@ -4,10 +4,11 @@
 #' @param colors \dots
 #' @param alpha \dots
 #' @param donut \dots
-#' @param title \dots
+#' @param donut_title \dots
+#' @param legend_position \dots
 #'
 #' @export
-shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title = "") {
+shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title = "", legend_position = c("right", "bottom")) {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var)))
@@ -26,7 +27,7 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
     dplyr::ungroup() %>%
     dplyr::mutate_at("text", scales::percent, decimal.mark = ",", suffix = "\u202F%", accuracy = 1) %>%
     dplyr::mutate_at("text", dplyr::recode, "0\u202F%" = "<\u202F1\u202F%") %>%
-    dplyr::mutate(effectif = scales::number(n, big.mark = "\u202F")) %>%
+    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
     plotly::plot_ly(
       labels = ~var, values = ~n,
       sort = FALSE,
@@ -43,7 +44,10 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
       xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       annotations = list(text = glue::glue("<b>{donut_title}</b>"), font = list(size = 15), showarrow = FALSE),
-      legend = list(y = 0.5)
+      legend = list(
+        orientation = ifelse(legend_position == "right", "v", "h"),
+        y = ifelse(legend_position == "right", 0.5, -0.1)
+      )
     ) %>%
     plotly::config(displayModeBar = FALSE)
 

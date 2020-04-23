@@ -4,7 +4,14 @@
 \alias{shiny_pie}
 \title{shiny_pie}
 \usage{
-shiny_pie(var, colors = NULL, alpha = 1, donut = FALSE, donut_title = "")
+shiny_pie(
+  var,
+  colors = NULL,
+  alpha = 1,
+  donut = FALSE,
+  donut_title = "",
+  legend_position = c("right", "bottom")
+)
 }
 \arguments{
 \item{var}{\dots}
@@ -15,7 +22,9 @@ shiny_pie(var, colors = NULL, alpha = 1, donut = FALSE, donut_title = "")
 
 \item{donut}{\dots}
 
-\item{title}{\dots}
+\item{donut_title}{\dots}
+
+\item{legend_position}{\dots}
 }
 \description{
 shiny_pie
