@@ -326,6 +326,10 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
 #' @export
 shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
 
+  if (is.null(colors)) {
+    colors <- graphr::shiny_colors(length(unique(var_x)))
+  }
+
   dplyr::tibble(
     labels = var_x
   ) %>%
@@ -338,16 +342,16 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
     dplyr::mutate_at("pct", ~ . / 100) %>%
     dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., decimal.mark = ",", suffix = "\u202F%"))) %>%
     dplyr::mutate(effectif = scales::number(n, big.mark = "\u202F")) %>%
-    dplyr::mutate(labels = glue::glue("{labels} ({pct})")) %>%
+    dplyr::mutate(labels_pct = glue::glue("{labels} ({pct})")) %>%
     plotly::plot_ly() %>%
     plotly::add_trace(
       type = "treemap",
-      labels = ~labels,
+      labels = ~labels_pct,
       parents = ~parents,
       values = ~n,
       hoverinfo = "text",
-      hovertext = ~glue::glue("Effectif: {effectif}"),
-      marker = list(colors = graphr::shiny_colors(length(unique(var_x)))),
+      hovertext = ~glue::glue("{labels}\nEffectif: {effectif}"),
+      marker = list(colors = colors),
       opacity = alpha
     ) %>%
     plotly::config(displayModeBar = FALSE)
