@@ -20,7 +20,7 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
     data <- dplyr::arrange(data, dplyr::desc(n))
   }
 
-  plot <- data %>%
+  data %>%
     dplyr::group_by() %>%
     dplyr::mutate(text = n / sum(n)) %>%
     dplyr::ungroup() %>%
@@ -38,19 +38,15 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
       marker = list(colors = colors),
       opacity = alpha
     ) %>%
-    plotly::config(displayModeBar = FALSE) %>%
+    plotly::add_pie(hole = ifelse(donut, 0.6, 0)) %>%
     plotly::layout(
       xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       annotations = list(text = glue::glue("<b>{donut_title}</b>"), font = list(size = 15), showarrow = FALSE),
       legend = list(y = 0.5)
-    )
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
 
-  if (donut == TRUE) {
-    plot <- plotly::add_pie(plot, hole = 0.6)
-  }
-
-  return(plot)
 }
 
 #' shiny_line_base100
