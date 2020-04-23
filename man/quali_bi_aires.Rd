@@ -12,8 +12,7 @@ quali_bi_aires(
   position_legende = "bas",
   taille_texte_legende = 1,
   nombre_lignes_legende = NULL,
-  palette_ordinal = FALSE,
-  ...
+  palette_ordinal = FALSE
 )
 }
 \arguments{
@@ -32,8 +31,6 @@ quali_bi_aires(
 \item{nombre_lignes_legende}{\dots}
 
 \item{palette_ordinal}{\dots}
-
-\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_bi_aires
