@@ -127,9 +127,14 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
 #' @param var_percent \dots
 #' @param title_x \dots
 #' @param title_y \dots
+#' @param colors \dots
 #'
 #' @export
-shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = "", title_y = "") {
+shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = "", title_y = "", colors = NULL) {
+
+  if (is.null(colors)) {
+    colors <- shiny_colors(length(unique(var_line)))
+  }
 
   data <- dplyr::tibble(
     var_year,
@@ -146,7 +151,7 @@ shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = 
 
   for (num_line in 1:nrow(data)) {
     plot <- plot %>%
-      plotly::add_lines(y = ~var_percent, data = data$data[[num_line]], name = data$var_line[num_line], line = list(shape = "linear"))
+      plotly::add_lines(y = ~var_percent, data = data$data[[num_line]], name = data$var_line[num_line], line = list(shape = "linear", color = colors[num_line]))
   }
 
   plot <- plot %>%
