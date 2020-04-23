@@ -1,12 +1,13 @@
-#' shiny_donut
+#' shiny_pie
 #'
 #' @param var \dots
-#' @param title \dots
 #' @param colors \dots
 #' @param alpha \dots
+#' @param donut \dots
+#' @param title \dots
 #'
 #' @export
-shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
+shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title = "") {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var)))
@@ -19,7 +20,7 @@ shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
     data <- dplyr::arrange(data, dplyr::desc(n))
   }
 
-  data %>%
+  plot <- data %>%
     dplyr::group_by() %>%
     dplyr::mutate(text = n / sum(n)) %>%
     dplyr::ungroup() %>%
@@ -37,15 +38,19 @@ shiny_donut <- function(var, title = "", colors = NULL, alpha = 1) {
       marker = list(colors = colors),
       opacity = alpha
     ) %>%
-    plotly::add_pie(hole = 0.6) %>%
+    plotly::config(displayModeBar = FALSE) %>%
     plotly::layout(
       xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-      annotations = list(text = glue::glue("<b>{title}</b>"), font = list(size = 15), showarrow = FALSE),
+      annotations = list(text = glue::glue("<b>{donut_title}</b>"), font = list(size = 15), showarrow = FALSE),
       legend = list(y = 0.5)
-    ) %>%
-    plotly::config(displayModeBar = FALSE)
+    )
 
+  if (donut == TRUE) {
+    plot <- plotly::add_pie(plot, hole = 0.6)
+  }
+
+  return(plot)
 }
 
 #' shiny_line_base100
