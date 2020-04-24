@@ -10,8 +10,7 @@ quali_uni_aires(
   n_graph,
   n_population,
   label_pourcentage = FALSE,
-  label_pourcentage_saut_ligne = TRUE,
-  ...
+  label_pourcentage_saut_ligne = TRUE
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ quali_uni_aires(
 \item{label_pourcentage}{\dots}
 
 \item{label_pourcentage_saut_ligne}{\dots}
-
-\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_uni_aires

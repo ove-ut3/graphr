@@ -11,8 +11,7 @@ quali_uni(
   lib_modalite_autre = NULL,
   choix_multiple = FALSE,
   marge_gauche = FALSE,
-  taille_texte = 3.5,
-  ...
+  taille_texte = 3.5
 )
 }
 \arguments{
@@ -29,8 +28,6 @@ quali_uni(
 \item{marge_gauche}{\dots}
 
 \item{taille_texte}{\dots}
-
-\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_uni

@@ -9,7 +9,8 @@ shiny_line_base100(
   var_value,
   title_x = "",
   title_y = "",
-  note_base100 = ""
+  note_base100 = "",
+  color = NULL
 )
 }
 \arguments{

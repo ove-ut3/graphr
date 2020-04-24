@@ -11,8 +11,7 @@ quali_bi(
   taille_texte = 3,
   taille_texte_legende = 1,
   orientation = "horizontal",
-  label_pourcentage = FALSE,
-  ...
+  label_pourcentage = FALSE
 )
 }
 \arguments{
@@ -29,8 +28,6 @@ quali_bi(
 \item{orientation}{\dots}
 
 \item{label_pourcentage}{\dots}
-
-\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_bi

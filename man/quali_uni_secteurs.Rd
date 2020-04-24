@@ -10,8 +10,7 @@ quali_uni_secteurs(
   marge_gauche = FALSE,
   effectif = TRUE,
   taille_texte = 3.5,
-  marges = TRUE,
-  ...
+  marges = TRUE
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ quali_uni_secteurs(
 \item{taille_texte}{\dots}
 
 \item{marges}{\dots}
-
-\item{\dots}{\code{scales::percent} additional arguments}
 }
 \description{
 quali_uni_secteurs
