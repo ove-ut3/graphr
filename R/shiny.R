@@ -489,35 +489,40 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
   data <- dplyr::tibble(
     parents,
     labels
-  ) %>%
-    dplyr::count(parents, labels) %>%
-    dplyr::mutate(parents = dplyr::if_else(parents == labels, "", parents))
+  )
 
   if (is.null(colors)) {
     colors <- graphr::shiny_colors(length(unique(parents)))
-
   }
-  colors <- c(rev(rep(colors, times = rev(table(data$parents)))), rev(colors))
 
-  data %>%
-    dplyr::bind_rows(
-      data %>%
-        dplyr::filter(parents != "") %>%
-        dplyr::group_by(parents) %>%
-        dplyr::summarise_at("n", sum) %>%
-        dplyr::ungroup() %>%
-        dplyr::mutate(
-          labels = parents,
-          parents = ""
-        )
-    ) %>%
-    dplyr::group_by(labels) %>%
-    dplyr::mutate(pct = n / sum(data$n) * 100) %>%
-    dplyr::ungroup() %>%
+  data_parents <- data %>%
+    dplyr::count(parents, sort = TRUE) %>%
+    dplyr::rename(labels = parents) %>%
+    dplyr::mutate(
+      parents = "",
+      color = colors
+    )
+
+  data_labels <- data %>%
+    dplyr::count(parents, labels) %>%
+    dplyr::filter(parents != labels) %>%
+    dplyr::left_join(
+      data_parents %>%
+        dplyr::select(labels, color),
+      by = c("parents" = "labels")
+    )
+
+  data_plot <- dplyr::bind_rows(
+    data_labels,
+    data_parents
+  ) %>%
+    dplyr::mutate(pct = n / nrow(data) * 100) %>%
     dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
     dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., decimal.mark = ",", accuracy = 1, suffix = "\u202F%"))) %>%
-    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
+    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F"))
+
+  data_plot %>%
     plotly::plot_ly() %>%
     plotly::add_trace(
       type = "treemap",
@@ -527,7 +532,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
       branchvalues = "total",
       hoverinfo = "text",
       hovertext = ~glue::glue("{labels}\nEffectif: {effectif}\nPourcentage: {pct}"),
-      marker = list(colors = colors),
+      marker = list(colors = data_plot$color),
       opacity = alpha
     ) %>%
     plotly::config(displayModeBar = FALSE)
