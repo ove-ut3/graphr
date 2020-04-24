@@ -42,7 +42,8 @@ shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1) {
       opacity = alpha,
       hoverinfo = "text",
       hovertext = ~paste0(
-        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "Valeur: ", var,
+        "<br>Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
         "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
       )
     ) %>%
@@ -91,7 +92,8 @@ shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1) {
       opacity = alpha,
       hoverinfo = "text",
       hovertext = ~paste0(
-        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "Valeur: ", var,
+        "<br>Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
         "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
       )
     ) %>%
@@ -145,7 +147,11 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
       textinfo = "text",
       text = ~text,
       hoverinfo = "text",
-      hovertext = ~glue::glue("Effectif: {effectif}"),
+      hovertext = ~ paste0(
+        "Valeur: ", var,
+        "<br>Effectif: ", effectif,
+        "<br>Pourcentage: ", text
+      ),
       marker = list(colors = colors),
       opacity = alpha
     ) %>%
@@ -181,8 +187,10 @@ shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", 
     plotly::plot_ly(
       x = ~var_year,
       hoverinfo = "text",
-      hovertext = ~paste0("Valeur: ", var_value,
-                          "<br>Base 100: ", round(base_100, digits = 1))
+      hovertext = ~paste0(
+        "Valeur: ", var_value,
+        "<br>Base 100: ", round(base_100, digits = 1)
+      )
     ) %>%
     plotly::add_lines(y = ~base_100, name = "linear", line = list(shape = "linear", color = color)) %>%
     plotly::layout(
@@ -330,7 +338,8 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
         stringr::str_c(dplyr::na_if(title_x, ""), ": ", var_x),
         paste("Effectif: ", scales::number(n, big.mark = "\u202F")),
         paste("Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")),
-        sep = "<br>")
+        sep = "<br>"
+      )
     ) %>%
     plotly::layout(
       xaxis = list(title = title_x, showgrid = FALSE),
@@ -371,7 +380,8 @@ shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1,
       opacity = alpha,
       hoverinfo = "text",
       hovertext = ~paste0(
-        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "Valeur: ", var_y,
+        "<br>Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
         "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
       )
     ) %>%
@@ -416,7 +426,8 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
       opacity = alpha,
       hoverinfo = "text",
       hovertext = ~paste0(
-        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "Valeur: ", var_y,
+        "<br>Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
         "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
       )
     ) %>%
@@ -468,7 +479,7 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
       parents = ~parents,
       values = ~n,
       hoverinfo = "text",
-      hovertext = ~glue::glue("{labels}\nEffectif: {effectif}"),
+      hovertext = ~glue::glue("Valeur: {labels}\nEffectif: {effectif}\nPourcentage: {pct}"),
       marker = list(colors = colors),
       opacity = alpha
     ) %>%
@@ -533,7 +544,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
       values = ~n,
       branchvalues = "total",
       hoverinfo = "text",
-      hovertext = ~glue::glue("{labels}\nEffectif: {effectif}\nPourcentage: {pct}"),
+      hovertext = ~glue::glue("Valeur: {labels}\nEffectif: {effectif}\nPourcentage: {pct}"),
       marker = list(colors = data_plot$color),
       opacity = alpha
     ) %>%
