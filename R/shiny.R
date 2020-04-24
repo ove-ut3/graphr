@@ -1,3 +1,109 @@
+#' shiny_barplot_horizontal
+#'
+#' @param var \dots
+#' @param colors \dots
+#' @param alpha \dots
+#'
+#' @export
+shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1) {
+
+  if (is.null(colors)) {
+    colors <- rev(shiny_colors(length(unique(var))))
+  }
+
+  data <- dplyr::tibble(
+    var
+  ) %>%
+    dplyr::count(var) %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::ungroup()
+
+  if (!is.factor(var)) {
+
+    data <- data %>%
+      dplyr::arrange(-n) %>%
+      dplyr::mutate(
+        var_trunc = stringr::str_sub(var, 1, 50),
+        var = dplyr::if_else(var_trunc == var, var, stringr::str_c(var_trunc, "..."))
+      ) %>%
+      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
+      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf) %>%
+      dplyr::arrange(var)
+
+  }
+
+  data %>%
+    dplyr::mutate_at("var", forcats::fct_rev) %>%
+    plotly::plot_ly(
+      type = 'bar', x = ~pct, y = ~var,
+      color = ~var,
+      colors = rev(colors),
+      opacity = alpha,
+      hoverinfo = "text",
+      hovertext = ~paste0(
+        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
+      )
+    ) %>%
+    plotly::layout(
+      xaxis = list(title = "", showgrid = FALSE, ticksuffix = "%"),
+      yaxis = list(title = "", showgrid = FALSE),
+      showlegend = FALSE
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
+
+}
+
+#' shiny_barplot_horizontal
+#'
+#' @param var \dots
+#' @param colors \dots
+#' @param alpha \dots
+#'
+#' @export
+shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1) {
+
+  if (is.null(colors)) {
+    colors <- shiny_colors(length(unique(var)))
+  }
+
+  data <- dplyr::tibble(
+    var
+  ) %>%
+    dplyr::count(var) %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::ungroup()
+
+  if (!is.factor(var)) {
+    data <- data %>%
+      dplyr::arrange(-n) %>%
+      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
+      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf)
+  }
+
+  data %>%
+    plotly::plot_ly(
+      type = 'bar', x = ~var, y = ~pct,
+      color = ~var,
+      colors = colors,
+      opacity = alpha,
+      hoverinfo = "text",
+      hovertext = ~paste0(
+        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
+      )
+    ) %>%
+    plotly::layout(
+      xaxis = list(title = "", showgrid = FALSE),
+      yaxis = list(title = "", showgrid = FALSE, ticksuffix = "%"),
+      showlegend = FALSE
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
+
+}
+
 #' shiny_pie
 #'
 #' @param var \dots
