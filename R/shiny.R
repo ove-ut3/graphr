@@ -15,16 +15,20 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
   }
 
   data <- dplyr::tibble(var) %>%
-    dplyr::count(var)
+    dplyr::count(var) %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(text = n / sum(n)) %>%
+    dplyr::ungroup()
 
   if (class(var) != "factor") {
-    data <- dplyr::arrange(data, dplyr::desc(n))
+    data <- data %>%
+      dplyr::arrange(-n) %>%
+      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
+      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf) %>%
+      dplyr::arrange(var)
   }
 
   data %>%
-    dplyr::group_by() %>%
-    dplyr::mutate(text = n / sum(n)) %>%
-    dplyr::ungroup() %>%
     dplyr::mutate_at("text", scales::percent, decimal.mark = ",", suffix = "\u202F%", accuracy = 1) %>%
     dplyr::mutate_at("text", dplyr::recode, "0\u202F%" = "<\u202F1\u202F%") %>%
     dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
