@@ -1,3 +1,109 @@
+#' shiny_barplot_horizontal
+#'
+#' @param var \dots
+#' @param colors \dots
+#' @param alpha \dots
+#'
+#' @export
+shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1) {
+
+  if (is.null(colors)) {
+    colors <- rev(shiny_colors(length(unique(var))))
+  }
+
+  data <- dplyr::tibble(
+    var
+  ) %>%
+    dplyr::count(var) %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::ungroup()
+
+  if (!is.factor(var)) {
+
+    data <- data %>%
+      dplyr::arrange(-n) %>%
+      dplyr::mutate(
+        var_trunc = stringr::str_sub(var, 1, 50),
+        var = dplyr::if_else(var_trunc == var, var, stringr::str_c(var_trunc, "..."))
+      ) %>%
+      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
+      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf) %>%
+      dplyr::arrange(var)
+
+  }
+
+  data %>%
+    dplyr::mutate_at("var", forcats::fct_rev) %>%
+    plotly::plot_ly(
+      type = 'bar', x = ~pct, y = ~var,
+      color = ~var,
+      colors = rev(colors),
+      opacity = alpha,
+      hoverinfo = "text",
+      hovertext = ~paste0(
+        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
+      )
+    ) %>%
+    plotly::layout(
+      xaxis = list(title = "", showgrid = FALSE, ticksuffix = "%"),
+      yaxis = list(title = "", showgrid = FALSE),
+      showlegend = FALSE
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
+
+}
+
+#' shiny_barplot_horizontal
+#'
+#' @param var \dots
+#' @param colors \dots
+#' @param alpha \dots
+#'
+#' @export
+shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1) {
+
+  if (is.null(colors)) {
+    colors <- shiny_colors(length(unique(var)))
+  }
+
+  data <- dplyr::tibble(
+    var
+  ) %>%
+    dplyr::count(var) %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::ungroup()
+
+  if (!is.factor(var)) {
+    data <- data %>%
+      dplyr::arrange(-n) %>%
+      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
+      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf)
+  }
+
+  data %>%
+    plotly::plot_ly(
+      type = 'bar', x = ~var, y = ~pct,
+      color = ~var,
+      colors = colors,
+      opacity = alpha,
+      hoverinfo = "text",
+      hovertext = ~paste0(
+        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
+        "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
+      )
+    ) %>%
+    plotly::layout(
+      xaxis = list(title = "", showgrid = FALSE),
+      yaxis = list(title = "", showgrid = FALSE, ticksuffix = "%"),
+      showlegend = FALSE
+    ) %>%
+    plotly::config(displayModeBar = FALSE)
+
+}
+
 #' shiny_pie
 #'
 #' @param var \dots
@@ -15,16 +121,20 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
   }
 
   data <- dplyr::tibble(var) %>%
-    dplyr::count(var)
+    dplyr::count(var) %>%
+    dplyr::group_by() %>%
+    dplyr::mutate(text = n / sum(n)) %>%
+    dplyr::ungroup()
 
   if (class(var) != "factor") {
-    data <- dplyr::arrange(data, dplyr::desc(n))
+    data <- data %>%
+      dplyr::arrange(-n) %>%
+      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
+      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf) %>%
+      dplyr::arrange(var)
   }
 
   data %>%
-    dplyr::group_by() %>%
-    dplyr::mutate(text = n / sum(n)) %>%
-    dplyr::ungroup() %>%
     dplyr::mutate_at("text", scales::percent, decimal.mark = ",", suffix = "\u202F%", accuracy = 1) %>%
     dplyr::mutate_at("text", dplyr::recode, "0\u202F%" = "<\u202F1\u202F%") %>%
     dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
@@ -261,7 +371,7 @@ shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1,
       opacity = alpha,
       hoverinfo = "text",
       hovertext = ~paste0(
-        "Effectif: ", scales::number(n, big.mark = "\u202F"),
+        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
         "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
       )
     ) %>%
@@ -306,7 +416,7 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
       opacity = alpha,
       hoverinfo = "text",
       hovertext = ~paste0(
-        "Effectif: ", scales::number(n, big.mark = "\u202F"),
+        "Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F"),
         "<br>Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")
       )
     ) %>%
@@ -348,8 +458,8 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
     dplyr::ungroup() %>%
     dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
-    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., decimal.mark = ",", suffix = "\u202F%"))) %>%
-    dplyr::mutate(effectif = scales::number(n, big.mark = "\u202F")) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., accuracy = 1, decimal.mark = ",", suffix = "\u202F%"))) %>%
+    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
     dplyr::mutate(labels_pct = glue::glue("{labels} ({pct})")) %>%
     plotly::plot_ly() %>%
     plotly::add_trace(
@@ -406,8 +516,8 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
     dplyr::ungroup() %>%
     dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
-    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., decimal.mark = ",", suffix = "\u202F%"))) %>%
-    dplyr::mutate(effectif = scales::number(n, big.mark = "\u202F")) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., decimal.mark = ",", accuracy = 1, suffix = "\u202F%"))) %>%
+    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
     plotly::plot_ly() %>%
     plotly::add_trace(
       type = "treemap",
