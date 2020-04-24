@@ -493,6 +493,8 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
 
   if (is.null(colors)) {
     colors <- graphr::shiny_colors(length(unique(parents)))
+  } else {
+    colors <- head(colors, length(unique(parents)))
   }
 
   data_parents <- data %>%
