@@ -189,7 +189,7 @@ shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", 
       hoverinfo = "text",
       hovertext = ~paste0(
         "Valeur: ", var_value,
-        "<br>Base 100: ", round(base_100, digits = 1)
+        "<br>Base 100: ", format(round(base_100, digits = 1), decimal.mark = ",")
       )
     ) %>%
     plotly::add_lines(y = ~base_100, name = "linear", line = list(shape = "linear", color = color)) %>%
