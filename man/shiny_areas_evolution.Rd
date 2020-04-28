@@ -4,7 +4,14 @@
 \alias{shiny_areas_evolution}
 \title{shiny_areas_evolution}
 \usage{
-shiny_areas_evolution(var_x, var_y, colors = NULL, title_x = "", title_y = "")
+shiny_areas_evolution(
+  var_x,
+  var_y,
+  colors = NULL,
+  title_x = "",
+  title_y = "",
+  font_family = NULL
+)
 }
 \arguments{
 \item{var_x}{\dots}
@@ -16,6 +23,8 @@ shiny_areas_evolution(var_x, var_y, colors = NULL, title_x = "", title_y = "")
 \item{title_x}{\dots}
 
 \item{title_y}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_areas_evolution

@@ -10,7 +10,8 @@ shiny_barplot_horizontal_multi(
   colors = NULL,
   alpha = 1,
   title_x = "",
-  title_y = ""
+  title_y = "",
+  font_family = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ shiny_barplot_horizontal_multi(
 \item{title_x}{\dots}
 
 \item{title_y}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_barplot_horizontal_multi

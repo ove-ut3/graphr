@@ -4,7 +4,7 @@
 \alias{shiny_barplot_vertical}
 \title{shiny_barplot_horizontal}
 \usage{
-shiny_barplot_vertical(var, colors = NULL, alpha = 1)
+shiny_barplot_vertical(var, colors = NULL, alpha = 1, font_family = NULL)
 }
 \arguments{
 \item{var}{\dots}
@@ -12,6 +12,8 @@ shiny_barplot_vertical(var, colors = NULL, alpha = 1)
 \item{colors}{\dots}
 
 \item{alpha}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_barplot_horizontal

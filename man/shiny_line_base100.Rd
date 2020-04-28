@@ -10,7 +10,8 @@ shiny_line_base100(
   title_x = "",
   title_y = "",
   note_base100 = "",
-  color = NULL
+  color = NULL,
+  font_family = NULL
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ shiny_line_base100(
 \item{title_y}{\dots}
 
 \item{note_base100}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_line_base100
