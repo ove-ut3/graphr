@@ -10,7 +10,8 @@ shiny_pie(
   alpha = 1,
   donut = FALSE,
   donut_title = "",
-  legend_position = c("right", "bottom")
+  legend_position = c("right", "bottom"),
+  font_family = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ shiny_pie(
 \item{donut_title}{\dots}
 
 \item{legend_position}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_pie

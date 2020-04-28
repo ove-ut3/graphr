@@ -10,7 +10,8 @@ shiny_line_percent_multi(
   var_percent,
   title_x = "",
   title_y = "",
-  colors = NULL
+  colors = NULL,
+  font_family = NULL
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ shiny_line_percent_multi(
 \item{title_y}{\dots}
 
 \item{colors}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_line_percent

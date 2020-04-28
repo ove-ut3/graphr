@@ -3,9 +3,10 @@
 #' @param var \dots
 #' @param colors \dots
 #' @param alpha \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1) {
+shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1, font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- rev(shiny_colors(length(unique(var))))
@@ -50,7 +51,8 @@ shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1) {
     plotly::layout(
       xaxis = list(title = "", showgrid = FALSE, ticksuffix = "%"),
       yaxis = list(title = "", showgrid = FALSE),
-      showlegend = FALSE
+      showlegend = FALSE,
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -61,9 +63,10 @@ shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1) {
 #' @param var \dots
 #' @param colors \dots
 #' @param alpha \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1) {
+shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1, font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var)))
@@ -114,9 +117,10 @@ shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1) {
 #' @param donut \dots
 #' @param donut_title \dots
 #' @param legend_position \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title = "", legend_position = c("right", "bottom")) {
+shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title = "", legend_position = c("right", "bottom"), font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var)))
@@ -163,7 +167,8 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
       legend = list(
         orientation = ifelse(legend_position == "right", "v", "h"),
         y = ifelse(legend_position == "right", 0.5, -0.1)
-      )
+      ),
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -176,9 +181,10 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
 #' @param title_x \dots
 #' @param title_y \dots
 #' @param note_base100 \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", note_base100 = "", color = NULL) {
+shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", note_base100 = "", color = NULL, font_family = NULL) {
 
   data <- dplyr::tibble(var_year, var_value) %>%
     dplyr::mutate(base_100 = graphr::base_100(var_value))
@@ -201,7 +207,8 @@ shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", 
         text = note_base100, xref = 'paper', yref = 'paper',
         x = 1.08, y = -0.16, xanchor = 'right', yanchor = 'auto',
         showarrow = FALSE
-      )
+      ),
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -215,9 +222,10 @@ shiny_line_base100 <- function(var_year, var_value, title_x = "", title_y = "", 
 #' @param title_y \dots
 #' @param hovertext \dots
 #' @param color \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = "", hovertext = NULL, color = NULL) {
+shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = "", hovertext = NULL, color = NULL, font_family = NULL) {
 
   dplyr::tibble(
     var_year,
@@ -233,7 +241,8 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
     plotly::layout(
       xaxis = list(title = title_x),
       yaxis = list(title = title_y, rangemode = "tozero", ticksuffix = "\u202F%"),
-      margin = list(r = 50)
+      margin = list(r = 50),
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -246,9 +255,10 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
 #' @param title_x \dots
 #' @param title_y \dots
 #' @param colors \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = "", title_y = "", colors = NULL) {
+shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = "", title_y = "", colors = NULL, font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var_line)))
@@ -277,7 +287,8 @@ shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = 
       hovermode = 'x',
       xaxis = list(title = title_x),
       yaxis = list(title = title_y, ticksuffix = "%", rangemode = "tozero"),
-      legend = list(y = 0.5)
+      legend = list(y = 0.5),
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -292,9 +303,10 @@ shiny_line_percent_multi <- function(var_year, var_line, var_percent, title_x = 
 #' @param colors \dots
 #' @param title_x \dots
 #' @param title_y \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", title_y = "") {
+shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", title_y = "", font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var_y)))
@@ -336,6 +348,7 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
       hoverinfo = "text",
       hovertext = ~ paste(
         stringr::str_c(dplyr::na_if(title_x, ""), ": ", var_x),
+        stringr::str_c(dplyr::na_if(title_y, ""), ": ", var_y),
         paste("Effectif: ", scales::number(n, big.mark = "\u202F")),
         paste("Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")),
         sep = "<br>"
@@ -344,7 +357,8 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
     plotly::layout(
       xaxis = list(title = title_x, showgrid = FALSE),
       yaxis = list(title = title_y, showgrid = FALSE, ticksuffix = "%"),
-      legend = list(y = 0.5)
+      legend = list(y = 0.5),
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -358,9 +372,10 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
 #' @param alpha \dots
 #' @param title_x \dots
 #' @param title_y \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1, title_x = "", title_y = "") {
+shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1, title_x = "", title_y = "", font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var_y)))
@@ -389,7 +404,8 @@ shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1,
       barmode = 'stack',
       xaxis = list(title = title_x, showgrid = FALSE),
       yaxis = list(title = title_y, showgrid = FALSE, ticksuffix = "%"),
-      legend = list(y = 0.5)
+      legend = list(y = 0.5),
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -403,9 +419,10 @@ shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1,
 #' @param alpha \dots
 #' @param title_x \dots
 #' @param title_y \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 1, title_x = "", title_y = "") {
+shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 1, title_x = "", title_y = "", font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- shiny_colors(length(unique(var_y)))
@@ -440,7 +457,8 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
         xanchor = "center",
         x = 0.5,
         traceorder = "normal"
-      )
+      ),
+      font = list(family = font_family)
     ) %>%
     plotly::config(displayModeBar = FALSE)
 
@@ -451,9 +469,10 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
 #' @param var_x \dots
 #' @param colors \dots
 #' @param alpha \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
+shiny_treemap <- function(var_x, colors = NULL, alpha = 1, font_family = NULL) {
 
   if (is.null(colors)) {
     colors <- graphr::shiny_colors(length(unique(var_x)))
@@ -483,6 +502,13 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
       marker = list(colors = colors),
       opacity = alpha
     ) %>%
+    plotly::layout(
+      uniformtext = list(
+        minsize = 15,
+        mode = "hide",
+        family = font_family
+      )
+    ) %>%
     plotly::config(displayModeBar = FALSE)
 
 }
@@ -493,9 +519,10 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1) {
 #' @param labels \dots
 #' @param colors \dots
 #' @param alpha \dots
+#' @param font_family \dots
 #'
 #' @export
-shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
+shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1, font_family = NULL) {
 
   data <- dplyr::tibble(
     parents,
@@ -547,6 +574,13 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1) {
       hovertext = ~glue::glue("Valeur: {labels}\nEffectif: {effectif}\nPourcentage: {pct}"),
       marker = list(colors = data_plot$color),
       opacity = alpha
+    ) %>%
+    plotly::layout(
+      uniformtext = list(
+        minsize = 10,
+        mode = "hide",
+        family = font_family
+      )
     ) %>%
     plotly::config(displayModeBar = FALSE)
 

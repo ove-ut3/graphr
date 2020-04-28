@@ -4,7 +4,7 @@
 \alias{shiny_treemap}
 \title{shiny_treemap}
 \usage{
-shiny_treemap(var_x, colors = NULL, alpha = 1)
+shiny_treemap(var_x, colors = NULL, alpha = 1, font_family = NULL)
 }
 \arguments{
 \item{var_x}{\dots}
@@ -12,6 +12,8 @@ shiny_treemap(var_x, colors = NULL, alpha = 1)
 \item{colors}{\dots}
 
 \item{alpha}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_treemap

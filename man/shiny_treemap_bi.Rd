@@ -4,7 +4,7 @@
 \alias{shiny_treemap_bi}
 \title{shiny_treemap_bi}
 \usage{
-shiny_treemap_bi(parents, labels, colors = NULL, alpha = 1)
+shiny_treemap_bi(parents, labels, colors = NULL, alpha = 1, font_family = NULL)
 }
 \arguments{
 \item{parents}{\dots}
@@ -14,6 +14,8 @@ shiny_treemap_bi(parents, labels, colors = NULL, alpha = 1)
 \item{colors}{\dots}
 
 \item{alpha}{\dots}
+
+\item{font_family}{\dots}
 }
 \description{
 shiny_treemap_bi
