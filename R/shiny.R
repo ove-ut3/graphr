@@ -348,8 +348,8 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
       hoverinfo = "text",
       hovertext = ~ paste(
         stringr::str_c(dplyr::na_if(title_x, ""), ": ", var_x),
-        stringr::str_c(dplyr::na_if(title_y, ""), ": ", var_y),
-        paste("Effectif: ", scales::number(n, big.mark = "\u202F")),
+        var_y,
+        paste("Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F")),
         paste("Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")),
         sep = "<br>"
       )
