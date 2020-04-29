@@ -28,9 +28,13 @@ shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1, font_family 
         var_trunc = stringr::str_sub(var, 1, 50),
         var = dplyr::if_else(var_trunc == var, var, stringr::str_c(var_trunc, "..."))
       ) %>%
-      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
-      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf) %>%
-      dplyr::arrange(var)
+      dplyr::mutate_at("var", ~ factor(., levels = var))
+
+    if ("Autre" %in% levels(data$var)) {
+      data <- dplyr::mutate_at(data, "var", forcats::fct_relevel, "Autre", after = Inf)
+    }
+
+    data <- dplyr::arrange(data, var)
 
   }
 
@@ -83,8 +87,11 @@ shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1, font_family = 
   if (!is.factor(var)) {
     data <- data %>%
       dplyr::arrange(-n) %>%
-      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
-      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf)
+      dplyr::mutate_at("var", ~ factor(., levels = var))
+
+      if ("Autre" %in% levels(data$var)) {
+        data <- dplyr::mutate_at(data, "var", forcats::fct_relevel, "Autre", after = Inf)
+      }
   }
 
   data %>%
@@ -135,9 +142,14 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
   if (class(var) != "factor") {
     data <- data %>%
       dplyr::arrange(-n) %>%
-      dplyr::mutate_at("var", ~ factor(., levels = var)) %>%
-      dplyr::mutate_at("var", forcats::fct_relevel, "Autre", after = Inf) %>%
-      dplyr::arrange(var)
+      dplyr::mutate_at("var", ~ factor(., levels = var))
+
+    if ("Autre" %in% levels(data$var)) {
+      data <- dplyr::mutate_at(data, "var", forcats::fct_relevel, "Autre", after = Inf)
+    }
+
+    data <- dplyr::arrange(data, var)
+
   }
 
   data %>%
