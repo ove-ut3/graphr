@@ -25,6 +25,8 @@ shiny_line_base100(
 
 \item{note_base100}{\dots}
 
+\item{color}{\dots}
+
 \item{font_family}{\dots}
 }
 \description{

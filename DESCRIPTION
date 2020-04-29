@@ -11,9 +11,11 @@ LazyData: true
 RoxygenNote: 7.1.0
 Imports:
     dplyr,
+    forcats,
     ggplot2,
     glue,
     plotly,
+    rlang,
     scales,
     stats,
     stringr,

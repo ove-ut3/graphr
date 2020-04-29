@@ -17,16 +17,16 @@ shiny_barplot_horizontal <- function(var, colors = NULL, alpha = 1, font_family 
   ) %>%
     dplyr::count(var) %>%
     dplyr::group_by() %>%
-    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::mutate(pct = .data$n / sum(.data$n) * 100) %>%
     dplyr::ungroup()
 
   if (!is.factor(var)) {
 
     data <- data %>%
-      dplyr::arrange(-n) %>%
+      dplyr::arrange(-.data$n) %>%
       dplyr::mutate(
         var_trunc = stringr::str_sub(var, 1, 50),
-        var = dplyr::if_else(var_trunc == var, var, stringr::str_c(var_trunc, "..."))
+        var = dplyr::if_else(.data$var_trunc == var, var, stringr::str_c(.data$var_trunc, "..."))
       ) %>%
       dplyr::mutate_at("var", ~ factor(., levels = var))
 
@@ -81,12 +81,12 @@ shiny_barplot_vertical <- function(var, colors = NULL, alpha = 1, font_family = 
   ) %>%
     dplyr::count(var) %>%
     dplyr::group_by() %>%
-    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::mutate(pct = .data$n / sum(.data$n) * 100) %>%
     dplyr::ungroup()
 
   if (!is.factor(var)) {
     data <- data %>%
-      dplyr::arrange(-n) %>%
+      dplyr::arrange(-.data$n) %>%
       dplyr::mutate_at("var", ~ factor(., levels = var))
 
       if ("Autre" %in% levels(data$var)) {
@@ -136,12 +136,12 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
   data <- dplyr::tibble(var) %>%
     dplyr::count(var) %>%
     dplyr::group_by() %>%
-    dplyr::mutate(text = n / sum(n)) %>%
+    dplyr::mutate(text = .data$n / sum(.data$n)) %>%
     dplyr::ungroup()
 
   if (class(var) != "factor") {
     data <- data %>%
-      dplyr::arrange(-n) %>%
+      dplyr::arrange(-.data$n) %>%
       dplyr::mutate_at("var", ~ factor(., levels = var))
 
     if ("Autre" %in% levels(data$var)) {
@@ -155,7 +155,7 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
   data %>%
     dplyr::mutate_at("text", scales::percent, decimal.mark = ",", suffix = "\u202F%", accuracy = 1) %>%
     dplyr::mutate_at("text", dplyr::recode, "0\u202F%" = "<\u202F1\u202F%") %>%
-    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
+    dplyr::mutate(effectif = scales::number(.data$n, accuracy = 1, big.mark = "\u202F")) %>%
     plotly::plot_ly(
       labels = ~var, values = ~n,
       sort = FALSE,
@@ -193,6 +193,7 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
 #' @param title_x \dots
 #' @param title_y \dots
 #' @param note_base100 \dots
+#' @param color \dots
 #' @param font_family \dots
 #'
 #' @export
@@ -263,6 +264,7 @@ shiny_line_percent <- function(var_year, var_percent, title_x = "", title_y = ""
 #' shiny_line_percent
 #'
 #' @param var_year \dots
+#' @param var_line \dots
 #' @param var_percent \dots
 #' @param title_x \dots
 #' @param title_y \dots
@@ -329,7 +331,7 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
     var_y,
   ) %>%
     dplyr::count(var_x, var_y) %>%
-    tidyr::spread(var_y, n, fill = 0) %>%
+    tidyr::spread(var_y, .data$n, fill = 0) %>%
     tidyr::gather("var_y", "n", -var_x)
 
   if (class(var_y) == "factor") {
@@ -340,9 +342,9 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
 
     levels <- data %>%
       dplyr::group_by(var_y) %>%
-      dplyr::summarise(n_total = sum(n)) %>%
+      dplyr::summarise(n_total = sum(.data$n)) %>%
       dplyr::ungroup() %>%
-      dplyr::arrange(dplyr::desc(n_total)) %>%
+      dplyr::arrange(dplyr::desc(.data$n_total)) %>%
       dplyr::pull(var_y)
 
   }
@@ -351,8 +353,8 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
     dplyr::mutate_at("var_y", factor, levels) %>%
     dplyr::arrange(var_x, var_y) %>%
     dplyr::group_by(var_x) %>%
-    dplyr::mutate(pct = n / sum(n) * 100) %>%
-    dplyr::mutate(cumsum = cumsum(pct)) %>%
+    dplyr::mutate(pct = .data$n / sum(.data$n) * 100) %>%
+    dplyr::mutate(cumsum = cumsum(.data$pct)) %>%
     dplyr::ungroup() %>%
     plotly::plot_ly(
       type = 'scatter', x = ~var_x, y = ~cumsum, color = ~var_y, colors = colors,
@@ -361,7 +363,7 @@ shiny_areas_evolution <- function(var_x, var_y, colors = NULL, title_x = "", tit
       hovertext = ~ paste(
         stringr::str_c(dplyr::na_if(title_x, ""), ": ", var_x),
         var_y,
-        paste("Effectif: ", scales::number(n, accuracy = 1, big.mark = "\u202F")),
+        paste("Effectif: ", scales::number(.data$n, accuracy = 1, big.mark = "\u202F")),
         paste("Pourcentage: ", scales::percent(pct / 100, accuracy = 0.1, decimal.mark = ",", suffix = "\u202F%")),
         sep = "<br>"
       )
@@ -399,7 +401,7 @@ shiny_barplot_vertical_multi <- function(var_x, var_y, colors = NULL, alpha = 1,
   ) %>%
     dplyr::count(var_x, var_y) %>%
     dplyr::group_by(var_x) %>%
-    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::mutate(pct = .data$n / sum(.data$n) * 100) %>%
     dplyr::ungroup() %>%
     plotly::plot_ly(
       type = 'bar', x = ~var_x, y = ~pct, color = ~var_y,
@@ -446,7 +448,7 @@ shiny_barplot_horizontal_multi <- function(var_x, var_y, colors = NULL, alpha = 
   ) %>%
     dplyr::count(var_x, var_y) %>%
     dplyr::group_by(var_x) %>%
-    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::mutate(pct = .data$n / sum(.data$n) * 100) %>%
     dplyr::ungroup() %>%
     dplyr::mutate_at("var_x", factor, levels = rev(levels(.$var_x))) %>%
     plotly::plot_ly(
@@ -494,14 +496,14 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1, font_family = NULL) {
     labels = var_x
   ) %>%
     dplyr::mutate(parents = character(nrow(.))) %>%
-    dplyr::count(labels, parents) %>%
+    dplyr::count(labels, .data$parents) %>%
     dplyr::group_by() %>%
-    dplyr::mutate(pct = n / sum(n) * 100) %>%
+    dplyr::mutate(pct = .data$n / sum(.data$n) * 100) %>%
     dplyr::ungroup() %>%
     dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
     dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., accuracy = 1, decimal.mark = ",", suffix = "\u202F%"))) %>%
-    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F")) %>%
+    dplyr::mutate(effectif = scales::number(.data$n, accuracy = 1, big.mark = "\u202F")) %>%
     dplyr::mutate(labels_pct = glue::glue("{labels} ({pct})")) %>%
     plotly::plot_ly() %>%
     plotly::add_trace(
@@ -544,7 +546,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1, font_fam
   if (is.null(colors)) {
     colors <- graphr::shiny_colors(length(unique(parents)))
   } else {
-    colors <- head(colors, length(unique(parents)))
+    colors <- utils::head(colors, length(unique(parents)))
   }
 
   data_parents <- data %>%
@@ -560,7 +562,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1, font_fam
     dplyr::filter(parents != labels) %>%
     dplyr::left_join(
       data_parents %>%
-        dplyr::select(labels, color),
+        dplyr::select(labels, .data$color),
       by = c("parents" = "labels")
     )
 
@@ -568,11 +570,11 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1, font_fam
     data_labels,
     data_parents
   ) %>%
-    dplyr::mutate(pct = n / nrow(data) * 100) %>%
+    dplyr::mutate(pct = .data$n / nrow(data) * 100) %>%
     dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
     dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., decimal.mark = ",", accuracy = 1, suffix = "\u202F%"))) %>%
-    dplyr::mutate(effectif = scales::number(n, accuracy = 1, big.mark = "\u202F"))
+    dplyr::mutate(effectif = scales::number(.data$n, accuracy = 1, big.mark = "\u202F"))
 
   data_plot %>%
     plotly::plot_ly() %>%

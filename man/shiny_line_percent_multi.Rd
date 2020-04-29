@@ -17,6 +17,8 @@ shiny_line_percent_multi(
 \arguments{
 \item{var_year}{\dots}
 
+\item{var_line}{\dots}
+
 \item{var_percent}{\dots}
 
 \item{title_x}{\dots}
