@@ -210,7 +210,7 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 
       plot <- plot +
         ggplot2::geom_text(
-          data = subset(stats, .data$n != 0),
+          data = dplyr::filter(stats, .data$n != 0),
           stat = "identity",
           ggplot2::aes(
             label = paste0(
@@ -226,7 +226,7 @@ quali_uni_aires <- function(champ_x, identifiant, n_graph, n_population, label_p
 
       plot <- plot +
         ggplot2::geom_text(
-          data = subset(stats, .data$n != 0),
+          data = dplyr::filter(stats, .data$n != 0),
           stat = "identity",
           ggplot2::aes(
             label = paste0(
@@ -484,7 +484,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
 
     plot <- plot +
       ggplot2::geom_text(
-        data = subset(stats, .data$n != 0),
+        data = dplyr::filter(stats, .data$n != 0),
         stat = "identity",
         ggplot2::aes(
           label = paste0(
@@ -499,7 +499,7 @@ quali_bi_aires <- function(champ_quali, champ_x, identifiant, label_pourcentage 
 
     plot <- plot +
       ggplot2::geom_text(
-        data = subset(stats, .data$n != 0),
+        data = dplyr::filter(stats, .data$n != 0),
         stat = "identity",
         ggplot2::aes(
           label = scales::number(.data$n, accuracy = 1, big.mark = "\u202F"),
@@ -612,15 +612,15 @@ quali_bi_ordinal <- function(champ_quali, champ_valeur, identifiant, taille_text
 
     plot <- plot +
       ggplot2::geom_text(
-        data = subset(stats, n != 0),
+        data = dplyr::filter(stats, .data$n != 0),
         position = "stack",
         size = 3,
         ggplot2::aes(
-          y = pos,
+          y = .data$pos,
           label = paste0(
-            scales::number(n, accuracy = 1, big.mark = "\u202F"),
+            scales::number(.data$n, accuracy = 1, big.mark = "\u202F"),
             " (",
-            scales::percent(pct, decimal.mark = ",", suffix = "\u202F%"),
+            scales::percent(.data$pct, decimal.mark = ",", suffix = "\u202F%"),
             ")"
           )
         )
@@ -758,7 +758,7 @@ quali_bi <- function(champ_quali, champ_valeur, identifiant, taille_texte = 3, t
 
     plot <- plot +
       ggplot2::geom_text(
-        data = subset(stats, .data$n != 0),
+        data = dplyr::filter(stats, .data$n != 0),
         position = "identity",
         size = 3,
         ggplot2::aes(
@@ -937,11 +937,11 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
 
     plot <- plot +
       ggplot2::geom_text(
-        data = subset(stats, n != 0),
+        data = dplyr::filter(stats, .data$n != 0),
         stat = "identity",
         ggplot2::aes(
           label = glue::glue("{lib_pct}\n({n})"),
-          y = pos
+          y = .data$pos
         ),
         size = 3
     )
@@ -950,7 +950,7 @@ quali_bi_aires2 <- function(champ_quali, champ_x, label_effectif = FALSE, positi
 
     plot <- plot +
       ggplot2::geom_text(
-        data = subset(stats, .data$n != 0),
+        data = dplyr::filter(stats, .data$n != 0),
         stat = "identity",
         ggplot2::aes(
           label = .data$lib_pct,
