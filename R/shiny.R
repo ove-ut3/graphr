@@ -502,7 +502,7 @@ shiny_treemap <- function(var_x, colors = NULL, alpha = 1, font_family = NULL) {
     dplyr::ungroup() %>%
     dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
-    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., accuracy = 1, decimal.mark = ",", suffix = "\u202F%"))) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\u202F%", scales::percent(., accuracy = 1, decimal.mark = ",", suffix = "\u202F%"))) %>%
     dplyr::mutate(effectif = scales::number(.data$n, accuracy = 1, big.mark = "\u202F")) %>%
     dplyr::mutate(labels_pct = glue::glue("{labels} ({pct})")) %>%
     plotly::plot_ly() %>%
@@ -573,7 +573,7 @@ shiny_treemap_bi <- function(parents, labels, colors = NULL, alpha = 1, font_fam
     dplyr::mutate(pct = .data$n / nrow(data) * 100) %>%
     dplyr::mutate_at("pct", graphr::round_100) %>%
     dplyr::mutate_at("pct", ~ . / 100) %>%
-    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\U202F%", scales::percent(., decimal.mark = ",", accuracy = 1, suffix = "\u202F%"))) %>%
+    dplyr::mutate_at("pct", ~ dplyr::if_else(. == 0, "< 1\u202F%", scales::percent(., decimal.mark = ",", accuracy = 1, suffix = "\u202F%"))) %>%
     dplyr::mutate(effectif = scales::number(.data$n, accuracy = 1, big.mark = "\u202F"))
 
   data_plot %>%
