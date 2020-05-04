@@ -154,7 +154,7 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
 
   data %>%
     dplyr::mutate_at("text", scales::percent, decimal.mark = ",", suffix = "\u202F%", accuracy = 1) %>%
-    dplyr::mutate_at("text", dplyr::recode, "0\u202F%" = "<\u202F1\u202F%") %>%
+    dplyr::mutate(text = dplyr::if_else(text == "0\u202F%", "<\u202F1\u202F%", text)) %>%
     dplyr::mutate(effectif = scales::number(.data$n, accuracy = 1, big.mark = "\u202F")) %>%
     plotly::plot_ly(
       labels = ~var, values = ~n,
