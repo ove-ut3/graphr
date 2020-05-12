@@ -136,7 +136,7 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
   data <- dplyr::tibble(var) %>%
     dplyr::count(var) %>%
     dplyr::group_by() %>%
-    dplyr::mutate(text = .data$n / sum(.data$n)) %>%
+    dplyr::mutate(pct = .data$n / sum(.data$n)) %>%
     dplyr::ungroup()
 
   if (class(var) != "factor") {
@@ -153,20 +153,20 @@ shiny_pie <- function(var, colors = NULL, alpha = 1, donut = FALSE, donut_title 
   }
 
   data %>%
-    dplyr::mutate_at("text", scales::percent, decimal.mark = ",", suffix = "\u202F%", accuracy = 1) %>%
-    dplyr::mutate(text = dplyr::if_else(text == "0\u202F%", "<\u202F1\u202F%", text)) %>%
+    dplyr::mutate_at("pct", scales::percent, decimal.mark = ",", suffix = "\u202F%", accuracy = 1) %>%
+    dplyr::mutate(pct = dplyr::if_else(.data$pct == "0\u202F%", "<\u202F1\u202F%", .data$pct)) %>%
     dplyr::mutate(effectif = scales::number(.data$n, accuracy = 1, big.mark = "\u202F")) %>%
     plotly::plot_ly(
       labels = ~var, values = ~n,
       sort = FALSE,
       direction = "clockwise",
       textinfo = "text",
-      text = ~text,
+      text = ~pct,
       hoverinfo = "text",
       hovertext = ~ paste0(
         "Valeur: ", var,
         "<br>Effectif: ", effectif,
-        "<br>Pourcentage: ", text
+        "<br>Pourcentage: ", pct
       ),
       marker = list(colors = colors),
       opacity = alpha
